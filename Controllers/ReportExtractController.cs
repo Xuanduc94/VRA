@@ -1,17 +1,6 @@
 ﻿using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Wordprocessing;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using Viettel_Report_Automation.Config;
-using Viettel_Report_Automation.Models;
+using System.Windows.Input;
 using Viettel_Report_Automation.Utils;
 
 namespace Viettel_Report_Automation.Controllers
@@ -43,12 +32,12 @@ namespace Viettel_Report_Automation.Controllers
             var workbookChamDiem = new XLWorkbook(fileChamdiem);
             var sheetChamDiem = workbookChamDiem.Worksheet("BC_chi_tiet");
             string monthStr = StringHelper.RemoveDiacriticsAndSpaces(sheetChamDiem.Cell("G1").Value.ToString(), false).Replace("/", ".").ToUpper();
-            progress.Report("Cấu hình theo dõi");
+            //progress.Report("Cấu hình theo dõi");
 
-            /* progress.Report("Cấu hình hoàn tất");
-             this.CreateMeTracking(fileTheodoi, monthStr.Trim());
-             progress.Report("Tính toán dữ liệu");
-             WriteToKPIFile(fileTheodoi, fileChamdiem);*/
+            //progress.Report("Cấu hình hoàn tất");
+            //this.CreateMeTracking(fileTheodoi, monthStr.Trim());
+            //progress.Report("Tính toán dữ liệu");
+            //WriteToKPIFile(fileTheodoi, fileChamdiem);
             string m = sheetChamDiem.Cell("G1").Value.ToString();
             string[] strSpilt = m.Split('/', ' ');
             int.TryParse(strSpilt[1], out int month);
@@ -62,12 +51,14 @@ namespace Viettel_Report_Automation.Controllers
 
             var workbook = new XLWorkbook(fileTheodoi);
             var worksheet = workbook.Worksheet(month.Trim());
-            if (workbook.Worksheets.FirstOrDefault(s => s.Name == "Meta") != null)
+            string m = month.Replace("THANG ", "");
+            if (workbook.Worksheets.FirstOrDefault(s => s.Name == "Meta" + m) != null)
             {
-                workbook.Worksheets.Delete("Meta");
+                workbook.Worksheets.Delete("Meta" + m);
             }
-            workbook.AddWorksheet("Meta");
-            var sheetMeta = workbook.Worksheet("Meta");
+
+            workbook.AddWorksheet("Meta" + m);
+            var sheetMeta = workbook.Worksheet("Meta" + m);
             int rowMeta = 1;
             for (int row = 5; row < worksheet.RowsUsed().Count(); row++)
             {
@@ -87,8 +78,11 @@ namespace Viettel_Report_Automation.Controllers
         private void WriteToKPIFile(string fileTheodoi, string fileChamdiem)
         {
             var workbook = new XLWorkbook(fileTheodoi);
+            if (workbook.Worksheets.FirstOrDefault(s => s.Name == "Meta") == null)
+            {
+                workbook.Worksheets.Add("Meta");
+            }
             var worksheet = workbook.Worksheet("Meta");
-
             var workbookKPI = new XLWorkbook(fileChamdiem);
             var worksheetKPI = workbookKPI.Worksheet("Meta");
             for (int row = 1; row < worksheet.RowsUsed().Count(); row++)
@@ -129,6 +123,7 @@ namespace Viettel_Report_Automation.Controllers
             {
                 var workbookTong = new XLWorkbook(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Files", "Tonghopquy.xlsx"));
                 int quater = NumberHelper.GetQuarter(month);
+                IXLWorksheet worksheetTong = null;
                 int[] monthOfQuater = new int[3];
                 switch (quater)
                 {
@@ -136,21 +131,25 @@ namespace Viettel_Report_Automation.Controllers
                         monthOfQuater[0] = 1;
                         monthOfQuater[1] = 2;
                         monthOfQuater[2] = 3;
+                        worksheetTong = workbookTong.Worksheet("Quy I");
                         break;
                     case 2:
                         monthOfQuater[0] = 4;
                         monthOfQuater[1] = 5;
                         monthOfQuater[2] = 6;
+                        worksheetTong = workbookTong.Worksheet("Quy II");
                         break;
                     case 3:
                         monthOfQuater[0] = 7;
                         monthOfQuater[1] = 8;
                         monthOfQuater[2] = 9;
+                        worksheetTong = workbookTong.Worksheet("Quy III");
                         break;
                     case 4:
                         monthOfQuater[0] = 10;
                         monthOfQuater[1] = 11;
                         monthOfQuater[2] = 12;
+                        worksheetTong = workbookTong.Worksheet("Quy IV");
                         break;
                     default:
                         break;
@@ -158,32 +157,76 @@ namespace Viettel_Report_Automation.Controllers
                 var workbookTheoDoi = new XLWorkbook(fileTheodoi);
 
                 bool check = true;
+                int[] months = new int[3];
+                int indexMonths = 0;
                 foreach (int i in monthOfQuater)
                 {
                     var ws = workbookTheoDoi.Worksheets.FirstOrDefault(s => s.Name == "THANG " + i + "." + DateTime.Now.Year);
-                    if (ws == null)
+                    if (ws != null)
                     {
-                        check = false;
-                        break;
+                       
+                        months[indexMonths] = i;
+                        indexMonths++;
                     }
                 }
-                if (check == false)
-                {
-                    progress.Report("Không đủ dữ liệu tạo báo cáo quý");
-                    return;
-                }
+               
                 // Tong hop bao cao
 
-                foreach (int i in monthOfQuater)
+                foreach (int i in months)
                 {
-                    var ws = workbookTheoDoi.Worksheets.FirstOrDefault(s => s.Name == "THANG " + i + "." + DateTime.Now.Year);
+                    var ws = workbookTheoDoi.Worksheets.FirstOrDefault(s => s.Name == "Meta" + i + "." + DateTime.Now.Year);
 
+                    // Ghi du lieu cac thang
+                    if (ws != null)
+                    {
+                        int rowTh = 3;
+                        for (int row = 1; row < ws.RowsUsed().Count(); row++)
+                        {
+                            string keyword = ws.Cell("A" + row).Value.ToString();
+                            //var search = worksheetTong.Search(keyword);
+                            var cell = worksheetTong.Cells().FirstOrDefault(c => c.GetString()  == keyword);
+                            // Ghi đầu mục chỉ tiêu
+                            if (cell == null)
+                            {
+                                worksheetTong.Cell("A"+ rowTh).Value =keyword;
+                                worksheetTong.Cell($"H{rowTh}").FormulaA1 = $"=B{rowTh}+D{rowTh}+F{rowTh}";
+                                worksheetTong.Cell("I" + rowTh).FormulaA1 = $"=C{rowTh}+E{rowTh}+G{rowTh}";
+                                rowTh++;
+                            }
+                        }
+                        int step = 1;
+                        rowTh = 3;
+                        for (int row = 1; row < ws.RowsUsed().Count(); row++)
+                        {
+                            string keyword = ws.Cell("A" + row).Value.ToString();
+                            var cell = worksheetTong.Cells().FirstOrDefault(c => c.GetString() == keyword);
+                            switch (step) {
+                                case 1:
+                                    worksheetTong.Cell("B" + rowTh).Value = NumberHelper.ParseStringToDouble(ws.Cell("B" + row).Value.ToString());
+                                    worksheetTong.Cell("C" + rowTh).Value = NumberHelper.ParseStringToDouble(ws.Cell("C" + row).Value.ToString());
+                                    break;
+                                case 2:
+                                    worksheetTong.Cell("D" + rowTh).Value = NumberHelper.ParseStringToDouble(ws.Cell("B" + row).Value.ToString());
+                                    worksheetTong.Cell("E" + rowTh).Value = NumberHelper.ParseStringToDouble(ws.Cell("C" + row).Value.ToString());
+                                    break;
+                                case 3:
+                                    worksheetTong.Cell("F" + rowTh).Value = NumberHelper.ParseStringToDouble(ws.Cell("B" + row).Value.ToString());
+                                    worksheetTong.Cell("G" + rowTh).Value = NumberHelper.ParseStringToDouble(ws.Cell("C" + row).Value.ToString());
+                                    break;
+                            }
+                           
+                        }
+                    }
                 }
+
+                workbookTong.Save();
+                workbookTong.Dispose();
+                workbookTheoDoi.Dispose();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                throw ex;
             }
 
         }

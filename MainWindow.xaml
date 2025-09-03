@@ -32,6 +32,7 @@
             </StackPanel.Resources>
         </StackPanel>
         <Label x:Name="lblProcess" HorizontalContentAlignment="Center"/>
+      
         <Button Style="{StaticResource PrimaryButton}" x:Name="btnExtract" Click="btnExtract_Click" Content="Trích xuất dữ liệu"/>
     </StackPanel>
 </Window>
