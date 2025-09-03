@@ -58,12 +58,11 @@ namespace Viettel_Report_Automation
                 Progress<string> progress = new Progress<string>(value =>
                 {
                     lblProcess.Content = value;
-                  
+
                 });
                 await Task.Run(() =>
                 {
                     ReportExtractController reportExtractController = new ReportExtractController();
-                    reportExtractController.generateReport(this.fileChamDiem, fileExcel, fileWord, progress);
                     SettingController settingController = new SettingController();
                     settingController.SettingScore(fileChamDiem, progress);
                     reportExtractController.generateReport(this.fileChamDiem, fileExcel, fileWord, progress);
@@ -104,8 +103,8 @@ namespace Viettel_Report_Automation
             {
                 this.fileChamDiem = openFileDialog.FileName;
                 lbl_chamdiem.Content = openFileDialog.FileName.Length > 50 ? openFileDialog.FileName.Substring(0, 30) + "..." : openFileDialog.FileName;
-               
-                            
+
+
 
             }
         }

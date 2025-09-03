@@ -157,23 +157,21 @@ namespace Viettel_Report_Automation.Controllers
                 var workbookTheoDoi = new XLWorkbook(fileTheodoi);
 
                 bool check = true;
-                int[] months = new int[3];
-                int indexMonths = 0;
+                List<int> months= new List<int>();
                 foreach (int i in monthOfQuater)
                 {
                     var ws = workbookTheoDoi.Worksheets.FirstOrDefault(s => s.Name == "THANG " + i + "." + DateTime.Now.Year);
                     if (ws != null)
                     {
-                       
-                        months[indexMonths] = i;
-                        indexMonths++;
+                       months.Add(i);
                     }
                 }
                
                 // Tong hop bao cao
-
+                // Lay bao cao theo thang 
                 foreach (int i in months)
                 {
+                    int step = 1;
                     var ws = workbookTheoDoi.Worksheets.FirstOrDefault(s => s.Name == "Meta" + i + "." + DateTime.Now.Year);
 
                     // Ghi du lieu cac thang
@@ -194,29 +192,31 @@ namespace Viettel_Report_Automation.Controllers
                                 rowTh++;
                             }
                         }
-                        int step = 1;
-                        rowTh = 3;
+                       
                         for (int row = 1; row < ws.RowsUsed().Count(); row++)
                         {
                             string keyword = ws.Cell("A" + row).Value.ToString();
                             var cell = worksheetTong.Cells().FirstOrDefault(c => c.GetString() == keyword);
-                            switch (step) {
+                            var rowNumber = cell.Address.RowNumber;
+                            switch (step)
+                            {
                                 case 1:
-                                    worksheetTong.Cell("B" + rowTh).Value = NumberHelper.ParseStringToDouble(ws.Cell("B" + row).Value.ToString());
-                                    worksheetTong.Cell("C" + rowTh).Value = NumberHelper.ParseStringToDouble(ws.Cell("C" + row).Value.ToString());
+                                    worksheetTong.Cell("B" + rowNumber).Value = NumberHelper.ParseStringToDouble(ws.Cell("B" + row).Value.ToString());
+                                    worksheetTong.Cell("C" + rowNumber).Value = NumberHelper.ParseStringToDouble(ws.Cell("C" + row).Value.ToString());
                                     break;
                                 case 2:
-                                    worksheetTong.Cell("D" + rowTh).Value = NumberHelper.ParseStringToDouble(ws.Cell("B" + row).Value.ToString());
-                                    worksheetTong.Cell("E" + rowTh).Value = NumberHelper.ParseStringToDouble(ws.Cell("C" + row).Value.ToString());
+                                    worksheetTong.Cell("D" + rowNumber).Value = NumberHelper.ParseStringToDouble(ws.Cell("B" + row).Value.ToString());
+                                    worksheetTong.Cell("E" + rowNumber).Value = NumberHelper.ParseStringToDouble(ws.Cell("C" + row).Value.ToString());
                                     break;
                                 case 3:
-                                    worksheetTong.Cell("F" + rowTh).Value = NumberHelper.ParseStringToDouble(ws.Cell("B" + row).Value.ToString());
-                                    worksheetTong.Cell("G" + rowTh).Value = NumberHelper.ParseStringToDouble(ws.Cell("C" + row).Value.ToString());
+                                    worksheetTong.Cell("F" + rowNumber).Value = NumberHelper.ParseStringToDouble(ws.Cell("B" + row).Value.ToString());
+                                    worksheetTong.Cell("G" + rowNumber).Value = NumberHelper.ParseStringToDouble(ws.Cell("C" + row).Value.ToString());
                                     break;
                             }
-                           
+                            
                         }
                     }
+                    step++;
                 }
 
                 workbookTong.Save();
