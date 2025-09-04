@@ -48,7 +48,7 @@
               "RelativeDocumentMoniker": "Controllers\\SettingController.cs",
               "ToolTip": "D:\\Viettel\\Viettel_Report_Automation\\Controllers\\SettingController.cs",
               "RelativeToolTip": "Controllers\\SettingController.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAcwA4AAABRAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-04T07:19:09.229Z",
               "EditorCaption": ""
@@ -63,8 +63,7 @@
               "RelativeToolTip": "Controllers\\ReportExtractController.cs",
               "ViewState": "AgIAADAAAAAAAAAAAADwv3YAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-04T06:58:09.253Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-04T06:58:09.253Z"
             },
             {
               "$type": "Document",
@@ -87,8 +86,7 @@
               "RelativeToolTip": "MainWindow.xaml.cs",
               "ViewState": "AgIAAEgAAAAAAAAAAAAYwEUAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-28T04:40:12.706Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-28T04:40:12.706Z"
             }
           ]
         }

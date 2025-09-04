@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Viettel_Report_Automation.Models
 {
-    internal class User
+    public class Staff
     {
-        public string Name { get; set; }
-        public string Password { get; set; }
+
+        public int Id { get; set; }
+        public string Staff_name { get; set; }
     }
 }
