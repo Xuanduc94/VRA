@@ -66,3 +66,4 @@ D:\Viettel\Viettel_Report_Automation\bin\Debug\net8.0-windows\RBush.dll
 D:\Viettel\Viettel_Report_Automation\bin\Debug\net8.0-windows\SixLabors.Fonts.dll
 D:\Viettel\Viettel_Report_Automation\bin\Debug\net8.0-windows\Files\ChamdiemKPI.xlsx
 D:\Viettel\Viettel_Report_Automation\bin\Debug\net8.0-windows\Files\Tonghopquy.xlsx
+D:\Viettel\Viettel_Report_Automation\obj\Debug\net8.0-windows\Viettel_Report_Automation.sourcelink.json
