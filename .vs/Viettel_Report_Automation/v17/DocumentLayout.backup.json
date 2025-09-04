@@ -3,20 +3,16 @@
   "WorkspaceRootPath": "D:\\Viettel\\Viettel_Report_Automation\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{EDE1EADB-8EDD-4862-B3FC-9E7E8E71C4A5}|Viettel_Report_Automation.csproj|d:\\viettel\\viettel_report_automation\\controllers\\settingcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EDE1EADB-8EDD-4862-B3FC-9E7E8E71C4A5}|Viettel_Report_Automation.csproj|solutionrelative:controllers\\settingcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EDE1EADB-8EDD-4862-B3FC-9E7E8E71C4A5}|Viettel_Report_Automation.csproj|d:\\viettel\\viettel_report_automation\\controllers\\reportextractcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EDE1EADB-8EDD-4862-B3FC-9E7E8E71C4A5}|Viettel_Report_Automation.csproj|solutionrelative:controllers\\reportextractcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EDE1EADB-8EDD-4862-B3FC-9E7E8E71C4A5}|Viettel_Report_Automation.csproj|d:\\viettel\\viettel_report_automation\\controllers\\wordreportcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EDE1EADB-8EDD-4862-B3FC-9E7E8E71C4A5}|Viettel_Report_Automation.csproj|solutionrelative:controllers\\wordreportcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EDE1EADB-8EDD-4862-B3FC-9E7E8E71C4A5}|Viettel_Report_Automation.csproj|d:\\viettel\\viettel_report_automation\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EDE1EADB-8EDD-4862-B3FC-9E7E8E71C4A5}|Viettel_Report_Automation.csproj|solutionrelative:mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EDE1EADB-8EDD-4862-B3FC-9E7E8E71C4A5}|Viettel_Report_Automation.csproj|d:\\viettel\\viettel_report_automation\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{EDE1EADB-8EDD-4862-B3FC-9E7E8E71C4A5}|Viettel_Report_Automation.csproj|solutionrelative:mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+      "AbsoluteMoniker": "D:0:0:{EDE1EADB-8EDD-4862-B3FC-9E7E8E71C4A5}|Viettel_Report_Automation.csproj|d:\\viettel\\viettel_report_automation\\controllers\\reportextractcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EDE1EADB-8EDD-4862-B3FC-9E7E8E71C4A5}|Viettel_Report_Automation.csproj|solutionrelative:controllers\\reportextractcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -41,52 +37,46 @@
               "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "SettingController.cs",
-              "DocumentMoniker": "D:\\Viettel\\Viettel_Report_Automation\\Controllers\\SettingController.cs",
-              "RelativeDocumentMoniker": "Controllers\\SettingController.cs",
-              "ToolTip": "D:\\Viettel\\Viettel_Report_Automation\\Controllers\\SettingController.cs",
-              "RelativeToolTip": "Controllers\\SettingController.cs",
-              "ViewState": "AgIAAC8AAAAAAAAAAADwvzAAAAAVAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-04T07:19:09.229Z",
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "ReportExtractController.cs",
-              "DocumentMoniker": "D:\\Viettel\\Viettel_Report_Automation\\Controllers\\ReportExtractController.cs",
-              "RelativeDocumentMoniker": "Controllers\\ReportExtractController.cs",
-              "ToolTip": "D:\\Viettel\\Viettel_Report_Automation\\Controllers\\ReportExtractController.cs",
-              "RelativeToolTip": "Controllers\\ReportExtractController.cs",
-              "ViewState": "AgIAADAAAAAAAAAAAADwv3YAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-04T06:58:09.253Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "MainWindow.xaml",
-              "DocumentMoniker": "D:\\Viettel\\Viettel_Report_Automation\\MainWindow.xaml",
-              "RelativeDocumentMoniker": "MainWindow.xaml",
-              "ToolTip": "D:\\Viettel\\Viettel_Report_Automation\\MainWindow.xaml",
-              "RelativeToolTip": "MainWindow.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-08-28T08:49:37.543Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
               "Title": "MainWindow.xaml.cs",
               "DocumentMoniker": "D:\\Viettel\\Viettel_Report_Automation\\MainWindow.xaml.cs",
               "RelativeDocumentMoniker": "MainWindow.xaml.cs",
               "ToolTip": "D:\\Viettel\\Viettel_Report_Automation\\MainWindow.xaml.cs",
               "RelativeToolTip": "MainWindow.xaml.cs",
-              "ViewState": "AgIAAEgAAAAAAAAAAAAYwEUAAAANAAAAAAAAAA==",
+              "ViewState": "AgIAADYAAAAAAAAAAAAIwEQAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-28T04:40:12.706Z"
+              "WhenOpened": "2025-09-04T08:26:48.374Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "WordReportController.cs",
+              "DocumentMoniker": "D:\\Viettel\\Viettel_Report_Automation\\Controllers\\WordReportController.cs",
+              "RelativeDocumentMoniker": "Controllers\\WordReportController.cs",
+              "ToolTip": "D:\\Viettel\\Viettel_Report_Automation\\Controllers\\WordReportController.cs",
+              "RelativeToolTip": "Controllers\\WordReportController.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAwwBUAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-04T08:02:53.606Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ReportExtractController.cs",
+              "DocumentMoniker": "D:\\Viettel\\Viettel_Report_Automation\\Controllers\\ReportExtractController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ReportExtractController.cs",
+              "ToolTip": "D:\\Viettel\\Viettel_Report_Automation\\Controllers\\ReportExtractController.cs",
+              "RelativeToolTip": "Controllers\\ReportExtractController.cs",
+              "ViewState": "AgIAAEEAAAAAAAAAAADwv0MAAABBAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-04T07:42:08.751Z"
             }
           ]
         }

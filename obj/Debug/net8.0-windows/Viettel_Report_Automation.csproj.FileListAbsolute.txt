@@ -61,7 +61,6 @@ D:\Viettel_Report_Automation\bin\Debug\net8.0-windows\SixLabors.Fonts.dll
 D:\Viettel\Viettel_Report_Automation\bin\Debug\net8.0-windows\ClosedXML.dll
 D:\Viettel\Viettel_Report_Automation\bin\Debug\net8.0-windows\ClosedXML.Parser.dll
 D:\Viettel\Viettel_Report_Automation\bin\Debug\net8.0-windows\ExcelNumberFormat.dll
-D:\Viettel\Viettel_Report_Automation\bin\Debug\net8.0-windows\Microsoft.Office.Interop.Word.dll
 D:\Viettel\Viettel_Report_Automation\bin\Debug\net8.0-windows\RBush.dll
 D:\Viettel\Viettel_Report_Automation\bin\Debug\net8.0-windows\SixLabors.Fonts.dll
 D:\Viettel\Viettel_Report_Automation\bin\Debug\net8.0-windows\Files\ChamdiemKPI.xlsx
@@ -192,3 +191,6 @@ D:\Viettel\Viettel_Report_Automation\bin\Debug\net8.0-windows\runtimes\win-x64\n
 D:\Viettel\Viettel_Report_Automation\bin\Debug\net8.0-windows\runtimes\win-x86\native\e_sqlite3.dll
 D:\Viettel\Viettel_Report_Automation\bin\Debug\net8.0-windows\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
 D:\Viettel\Viettel_Report_Automation\bin\Debug\net8.0-windows\Files\Tonghopquy.xlsx
+D:\Viettel\Viettel_Report_Automation\bin\Debug\net8.0-windows\Files\word_mau.docx
+D:\Viettel\Viettel_Report_Automation\bin\Debug\net8.0-windows\Xceed.Document.NET.dll
+D:\Viettel\Viettel_Report_Automation\bin\Debug\net8.0-windows\Xceed.Words.NET.dll

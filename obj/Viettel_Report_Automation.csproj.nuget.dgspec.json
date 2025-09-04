@@ -50,6 +50,10 @@
               "target": "Package",
               "version": "[0.105.0, )"
             },
+            "DocX": {
+              "target": "Package",
+              "version": "[1.7.0, )"
+            },
             "DocumentFormat.OpenXml": {
               "target": "Package",
               "version": "[3.3.0, )"
@@ -67,10 +71,6 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[9.0.8, )"
-            },
-            "Microsoft.Office.Interop.Word": {
-              "target": "Package",
-              "version": "[15.0.4797.1004, )"
             }
           },
           "imports": [

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Viettel_Report_Automation")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+065be172624c57bb8655fd06bcdde894a688352b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b3e628a4e9dff043ae532ccd9f486a0f0b418b9d")]
 [assembly: System.Reflection.AssemblyProductAttribute("Viettel_Report_Automation")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Viettel_Report_Automation")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
