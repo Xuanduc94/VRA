@@ -191,6 +191,4 @@ D:\Viettel\Viettel_Report_Automation\bin\Debug\net8.0-windows\runtimes\win-arm64
 D:\Viettel\Viettel_Report_Automation\bin\Debug\net8.0-windows\runtimes\win-x64\native\e_sqlite3.dll
 D:\Viettel\Viettel_Report_Automation\bin\Debug\net8.0-windows\runtimes\win-x86\native\e_sqlite3.dll
 D:\Viettel\Viettel_Report_Automation\bin\Debug\net8.0-windows\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
-D:\Viettel\Viettel_Report_Automation\obj\Debug\net8.0-windows\Staff.g.cs
-D:\Viettel\Viettel_Report_Automation\obj\Debug\net8.0-windows\Staff.baml
 D:\Viettel\Viettel_Report_Automation\bin\Debug\net8.0-windows\Files\Tonghopquy.xlsx

@@ -45,7 +45,34 @@ namespace Viettel_Report_Automation.Controllers
             progress.Report("Tổng hợp báo cáo");
             int quater = NumberHelper.GetQuarter(month);
             MappingDataYearAndQuaterToKPI(quater, fileChamdiem);
+            MappingDataTotal(fileChamdiem);
             progress.Report("Đã tính toán xong");
+        }
+
+        private void MappingDataTotal(string fileChamDiem)
+        {
+            var workbookChamDiem = new XLWorkbook(fileChamDiem);
+            var sheetChamDiem = workbookChamDiem.Worksheet("MetaTH");
+            var wbTong = new XLWorkbook(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Files", "Tonghopquy.xlsx"));
+            var yearSheet = wbTong.Worksheet("Nam");
+            for (int row = 3; row < yearSheet.RowsUsed().Count(); row++)
+            {
+                string keyword = yearSheet.Cell($"A{row}").Value.ToString();
+                var cell = sheetChamDiem.Cells().FirstOrDefault(c => c.GetString() == keyword);
+                if (cell != null)
+                {
+                    int rowCell = cell.Address.RowNumber;
+                    // Du lieu nam 
+                    sheetChamDiem.Cell($"B{rowCell}").Value = NumberHelper.ParseStringToDouble(yearSheet.Cell($"C{row}").Value.ToString());
+                    sheetChamDiem.Cell($"C{rowCell}").Value = NumberHelper.ParseStringToDouble(yearSheet.Cell($"E{row}").Value.ToString());
+                    sheetChamDiem.Cell($"D{rowCell}").Value = NumberHelper.ParseStringToDouble(yearSheet.Cell($"G{row}").Value.ToString());
+
+                }
+            }
+
+            workbookChamDiem.Save();
+            workbookChamDiem.Dispose();
+            wbTong.Dispose();
         }
 
         private void MappingDataYearAndQuaterToKPI(int quater, string fileChamDiem)
@@ -90,7 +117,7 @@ namespace Viettel_Report_Automation.Controllers
                             break;
                     }
                 }
-              
+
             }
             workbookChamDiem.Save();
             workbookChamDiem.Dispose();
@@ -135,7 +162,7 @@ namespace Viettel_Report_Automation.Controllers
             {
                 workbook.Worksheets.Add("Meta");
             }
-           
+
             var worksheet = workbook.Worksheet("Meta");
             var workbookKPI = new XLWorkbook(fileChamdiem);
             var worksheetKPI = workbookKPI.Worksheet("Meta");
