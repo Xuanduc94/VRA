@@ -63,11 +63,12 @@ namespace Viettel_Report_Automation
                 await Task.Run(() =>
                 {
                     ReportExtractController reportExtractController = new ReportExtractController();
-                    SettingController settingController = new SettingController();
-                    settingController.SettingScore(fileChamDiem, progress);
+                    //SettingController settingController = new SettingController();
+                    //settingController.SettingScore(fileChamDiem, progress);
                     reportExtractController.generateReport(this.fileChamDiem, fileExcel, fileWord, progress);
                 });
-                lblProcess.Content = "Trích xuất dữ liệu hoàn tất ";
+              
+                
             }
         }
 
