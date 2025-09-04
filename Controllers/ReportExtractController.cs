@@ -30,8 +30,7 @@ namespace Viettel_Report_Automation.Controllers
             var workbookChamDiem = new XLWorkbook(fileChamdiem);
             var sheetChamDiem = workbookChamDiem.Worksheet("BC_chi_tiet");
             string monthStr = StringHelper.RemoveDiacriticsAndSpaces(sheetChamDiem.Cell("G1").Value.ToString(), false).Replace("/", ".").ToUpper();
-            progress.Report("Cấu hình theo dõi");
-            progress.Report("Cấu hình hoàn tất");
+            progress.Report("Tiến hành cấu hình");
             this.CreateMeTracking(fileTheodoi, monthStr.Trim());
             progress.Report("Tính toán dữ liệu");
             WriteToKPIFile(fileTheodoi, fileChamdiem);
@@ -118,6 +117,7 @@ namespace Viettel_Report_Automation.Controllers
                 var data = worksheet.Cell("B" + row).Value.ToString();
                 if (data != "")
                 {
+                    // Bỏ hết dấu và dấu cách để làm Id
                     sheetMeta.Cell("A" + rowMeta).Value = StringHelper.RemoveDiacriticsAndSpaces(data);
                     sheetMeta.Cell("B" + rowMeta).Value = NumberHelper.ParseStringToDouble(worksheet.Cell("G" + row).Value.ToString());
                     sheetMeta.Cell("C" + rowMeta).Value = NumberHelper.ParseStringToDouble(worksheet.Cell("H" + row).Value.ToString());
@@ -135,9 +135,11 @@ namespace Viettel_Report_Automation.Controllers
             {
                 workbook.Worksheets.Add("Meta");
             }
+           
             var worksheet = workbook.Worksheet("Meta");
             var workbookKPI = new XLWorkbook(fileChamdiem);
             var worksheetKPI = workbookKPI.Worksheet("Meta");
+
             for (int row = 1; row < worksheet.RowsUsed().Count(); row++)
             {
                 string findStr = worksheet.Cell("A" + row).Value.ToString();
