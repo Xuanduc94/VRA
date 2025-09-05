@@ -51,6 +51,18 @@
           }
         }
       },
+      "DocX/1.7.0": {
+        "runtime": {
+          "lib/net40/Xceed.Document.NET.dll": {
+            "assemblyVersion": "1.7.0.0",
+            "fileVersion": "1.7.0.0"
+          },
+          "lib/net40/Xceed.Words.NET.dll": {
+            "assemblyVersion": "1.7.0.0",
+            "fileVersion": "1.7.0.0"
+          }
+        }
+      },
       "ExcelNumberFormat/1.1.0": {
         "runtime": {
           "lib/netstandard2.0/ExcelNumberFormat.dll": {
@@ -582,14 +594,6 @@
           }
         }
       },
-      "Microsoft.Office.Interop.Word/15.0.4797.1004": {
-        "runtime": {
-          "lib/netstandard2.0/Microsoft.Office.Interop.Word.dll": {
-            "assemblyVersion": "15.0.0.0",
-            "fileVersion": "15.0.4797.1003"
-          }
-        }
-      },
       "Mono.TextTemplating/3.0.0": {
         "dependencies": {
           "System.CodeDom": "6.0.0"
@@ -947,6 +951,13 @@
       "path": "documentformat.openxml.framework/3.3.0",
       "hashPath": "documentformat.openxml.framework.3.3.0.nupkg.sha512"
     },
+    "DocX/1.7.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-nNapS06LBhlvYYNAj2/ouDhTvwqfcYp3JbbexkE5fYFx4cT7SA5g3QHWkkWf6YsiMfv79Jhwe6WrVhTuROJclg==",
+      "path": "docx/1.7.0",
+      "hashPath": "docx.1.7.0.nupkg.sha512"
+    },
     "ExcelNumberFormat/1.1.0": {
       "type": "package",
       "serviceable": true,
@@ -1156,13 +1167,6 @@
       "sha512": "sha512-tizSIOEsIgSNSSh+hKeUVPK7xmTIjR8s+mJWOu1KXV3htvNQiPMFRMO17OdI1y/4ZApdBVk49u/08QGC9yvLug==",
       "path": "microsoft.extensions.primitives/9.0.8",
       "hashPath": "microsoft.extensions.primitives.9.0.8.nupkg.sha512"
-    },
-    "Microsoft.Office.Interop.Word/15.0.4797.1004": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-lavTOrMGK/o/t3+gGr7JuVrL8XDdnS0DwPLcYv/StOiysXO4L0C36IXTVtEJo1Mh9Aoxo9a8dgGcPi+faTlv0g==",
-      "path": "microsoft.office.interop.word/15.0.4797.1004",
-      "hashPath": "microsoft.office.interop.word.15.0.4797.1004.nupkg.sha512"
     },
     "Mono.TextTemplating/3.0.0": {
       "type": "package",

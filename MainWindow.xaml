@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Viettel_Report_Automation"
         mc:Ignorable="d"
         SizeToContent="WidthAndHeight"
-        Title="Tự động hoá báo cáo" Height="auto" Width="auto" WindowStartupLocation="CenterScreen">
+        Title="Tự động hoá báo cáo" MaxHeight="300" MaxWidth="600" WindowStartupLocation="CenterScreen">
     <StackPanel Orientation="Vertical">
         <StackPanel  Orientation="Horizontal" x:Name="excel_area">
             <Label Width="150" Content="File Excel KPI tháng "/>
