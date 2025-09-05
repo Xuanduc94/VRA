@@ -268,9 +268,9 @@ namespace Viettel_Report_Automation.Controllers
                             // Ghi đầu mục chỉ tiêu
                             if (cell == null)
                             {
-                                worksheetTong.Cell("A" + rowTh).Value = keyword;
+                                worksheetTong.Cell($"A{rowTh}").Value = keyword;
                                 worksheetTong.Cell($"H{rowTh}").FormulaA1 = $"=B{rowTh}+D{rowTh}+F{rowTh}";
-                                worksheetTong.Cell("I" + rowTh).FormulaA1 = $"=C{rowTh}+E{rowTh}+G{rowTh}";
+                                worksheetTong.Cell($"I{rowTh}").FormulaA1 = $"=C{rowTh}+E{rowTh}+G{rowTh}";
                                 rowTh++;
                             }
                         }
