@@ -26,7 +26,7 @@ namespace Viettel_Report_Automation.Controllers
 
         private void TonghopTheoDoi(string fileChamdiem, string fileTheodoi, string fileWord, IProgress<string> progress)
         {
-            progress.Report("Trích xuất file theo dõi KPI");
+           progress.Report("Trích xuất file theo dõi KPI");
             var workbookChamDiem = new XLWorkbook(fileChamdiem);
             var sheetChamDiem = workbookChamDiem.Worksheet("BC_chi_tiet");
             string monthStr = StringHelper.RemoveDiacriticsAndSpaces(sheetChamDiem.Cell("G1").Value.ToString(), false).Replace("/", ".").ToUpper();

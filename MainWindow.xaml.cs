@@ -27,7 +27,7 @@ namespace Viettel_Report_Automation
                 if (openFileDialog.FileName.Length > 20)
                 {
                     string[] fileName = openFileDialog.FileName.Split("\\");
-                  //  lbl_fileName.Content = lbl + "...../" + fileName[fileName.Length - 1];
+                    //  lbl_fileName.Content = lbl + "...../" + fileName[fileName.Length - 1];
                 }
                 else
                 {
@@ -63,13 +63,12 @@ namespace Viettel_Report_Automation
                 await Task.Run(() =>
                 {
                     //ReportExtractController reportExtractController = new ReportExtractController();
-                    //new SettingController().SettingScore(fileChamDiem, progress);
+                    // new SettingController().SettingScore(fileChamDiem, progress);
                     //reportExtractController.generateReport(this.fileChamDiem, fileExcel, fileWord, progress);
-
                     new WordReportController().generateWordFile(progress);
                 });
-              
-                
+
+
             }
         }
 
@@ -91,7 +90,7 @@ namespace Viettel_Report_Automation
                 }
                 fileExcel = openFileDialog.FileName.ToString();
                 kpi_area.IsEnabled = true;
-               // word_are.IsEnabled = true;
+                // word_are.IsEnabled = true;
             }
         }
 
