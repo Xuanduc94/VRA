@@ -62,10 +62,10 @@ namespace Viettel_Report_Automation
                 });
                 await Task.Run(() =>
                 {
-                    //ReportExtractController reportExtractController = new ReportExtractController();
-                    // new SettingController().SettingScore(fileChamDiem, progress);
-                    //reportExtractController.generateReport(this.fileChamDiem, fileExcel, fileWord, progress);
-                    new WordReportController().generateWordFile(progress);
+                    ReportExtractController reportExtractController = new ReportExtractController();
+                    new SettingController().SettingScore(fileChamDiem, progress);
+                    reportExtractController.generateReport(this.fileChamDiem, fileExcel, fileWord, progress);
+                    new WordReportController().generateWordFile(progress, fileChamDiem);
                 });
 
 

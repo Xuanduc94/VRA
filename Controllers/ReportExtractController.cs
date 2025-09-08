@@ -1,6 +1,6 @@
 ﻿using ClosedXML.Excel;
 using System.IO;
-using System.Windows.Input;
+using System.Windows;
 using Viettel_Report_Automation.Utils;
 
 namespace Viettel_Report_Automation.Controllers
@@ -15,7 +15,6 @@ namespace Viettel_Report_Automation.Controllers
             try
             {
                 TonghopTheoDoi(fileChamdiem, fileTheodoi, fileWord, progress);
-
             }
             catch (Exception ex)
             {
@@ -33,7 +32,7 @@ namespace Viettel_Report_Automation.Controllers
             progress.Report("Tiến hành cấu hình");
             this.CreateMeTracking(fileTheodoi, monthStr.Trim());
             progress.Report("Tính toán dữ liệu");
-            WriteToKPIFile(fileTheodoi, fileChamdiem);
+            WriteToKPIFile(fileTheodoi, fileChamdiem, monthStr.Split(" ")[1]);
             string m = sheetChamDiem.Cell("G1").Value.ToString();
             string[] strSpilt = m.Split('/', ' ');
             int.TryParse(strSpilt[1], out int month);
@@ -137,6 +136,7 @@ namespace Viettel_Report_Automation.Controllers
             }
 
             workbook.AddWorksheet("Meta" + m);
+            Application.Current.Properties["metaTheodoi"] = "Meta" + m;
             var sheetMeta = workbook.Worksheet("Meta" + m);
             int rowMeta = 1;
             for (int row = 5; row < worksheet.RowsUsed().Count(); row++)
@@ -155,18 +155,18 @@ namespace Viettel_Report_Automation.Controllers
             workbook.Dispose();
         }
 
-        private void WriteToKPIFile(string fileTheodoi, string fileChamdiem)
+        private void WriteToKPIFile(string fileTheodoi, string fileChamdiem, string month)
         {
             var workbook = new XLWorkbook(fileTheodoi);
-            if (workbook.Worksheets.FirstOrDefault(s => s.Name == "Meta") == null)
+            if (workbook.Worksheets.FirstOrDefault(s => s.Name == $"Meta{month}") == null)
             {
-                workbook.Worksheets.Add("Meta");
+                workbook.Worksheets.Add($"Meta{month}");
             }
 
-            var worksheet = workbook.Worksheet("Meta");
+            var worksheet = workbook.Worksheet($"Meta{month}");
             var workbookKPI = new XLWorkbook(fileChamdiem);
             var worksheetKPI = workbookKPI.Worksheet("Meta");
-
+            // Chep du lieu tu file theo doi vao file kpi
             for (int row = 1; row < worksheet.RowsUsed().Count(); row++)
             {
                 string findStr = worksheet.Cell("A" + row).Value.ToString();
