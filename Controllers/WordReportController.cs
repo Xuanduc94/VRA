@@ -1,6 +1,6 @@
 ﻿using ClosedXML.Excel;
+using System.Data;
 using System.IO;
-using System.Windows;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
 
@@ -29,6 +29,32 @@ namespace Viettel_Report_Automation.Controllers
 
                 doc.ReplaceText("{nhanxet01}", "Vị trí trạm hiện tại Viettel đang chiếm ưu thế với 1633 vị trí. Số lượng vị trí trạm Viettel nhiều hơn Vinaphone 240 vị trí và nhiều hơn Mobifone 510 vị trí. Xét về mức huyện Viettel còn 4 huyện có vị trí trạm ít hơn nhà mạng Vina là Krông Bông ít hơn 4 vị trí, Huyện Ea Súp và Krông Búk ít hơn 1 vị trí, huyện Ea Súp ít hơn 5 trạm");
                 doc.ReplaceText("{h_ketquathuchien6thang}", "KẾT QUẢ THỰC HIỆN 6 THÁNG ĐẦU NĂM 2025");
+               
+               /* var tableMobileNetwork = doc.AddTable(2, 5);
+                tableMobileNetwork.Design = TableDesign.TableGrid;
+                tableMobileNetwork.Rows[0].Cells[0].Paragraphs[0].Append("Nhà mạng");
+                tableMobileNetwork.Rows[0].Cells[1].Paragraphs[0].Append("Viettel");
+                tableMobileNetwork.Rows[0].Cells[2].Paragraphs[0].Append("Mobi");
+                tableMobileNetwork.Rows[0].Cells[3].Paragraphs[0].Append("Vina");
+                tableMobileNetwork.Rows[0].Cells[4].Paragraphs[0].Append("Tổng ba nhà mạng");
+
+                tableMobileNetwork.Rows[1].Cells[0].Paragraphs[0].Append("Tổng vị trí");
+                tableMobileNetwork.Rows[1].Cells[1].Paragraphs[0].Append("1667");
+                tableMobileNetwork.Rows[1].Cells[2].Paragraphs[0].Append("3342");
+                tableMobileNetwork.Rows[1].Cells[3].Paragraphs[0].Append("345");
+                tableMobileNetwork.Rows[1].Cells[4].Paragraphs[0].Append("6657");
+
+                tableMobileNetwork.Rows[2].Cells[0].Paragraphs[0].Append("%");
+                tableMobileNetwork.Rows[2].Cells[1].Paragraphs[0].Append("19%");
+                tableMobileNetwork.Rows[2].Cells[2].Paragraphs[0].Append("26%");
+                tableMobileNetwork.Rows[2].Cells[3].Paragraphs[0].Append("55%");
+                tableMobileNetwork.Rows[2].Cells[4].Paragraphs[0].Append("100%");
+
+                tableMobileNetwork.Rows[3].Cells[0].Paragraphs[0].Append("Trạm 2G");
+                tableMobileNetwork.Rows[3].Cells[1].Paragraphs[0].Append("845");
+                tableMobileNetwork.Rows[3].Cells[2].Paragraphs[0].Append("644");
+                tableMobileNetwork.Rows[3].Cells[3].Paragraphs[0].Append("785");
+                tableMobileNetwork.Rows[3].Cells[4].Paragraphs[0].Append("2274");*/
 
                 // tao bang
                 var table = doc.AddTable(2, 11);
@@ -74,7 +100,7 @@ namespace Viettel_Report_Automation.Controllers
                 table.Rows[1].Cells[10].Paragraphs[0].Alignment = Alignment.center;
 
                 /*-----------------------------------------------------------------------*/
-               
+
                 int rowTable = 2;
                 for (int row = 3; row < ws.RowsUsed().Count(); row++)
                 {
@@ -82,10 +108,10 @@ namespace Viettel_Report_Automation.Controllers
                     string dauMuc = ws.Cell($"B{row}").Value.ToString();
                     table.Rows[rowTable].Cells[0].Paragraphs[0].Append(dauMuc).Font(font);
                     table.Rows[rowTable].Cells[1].Paragraphs[0].Append(ws.Cell($"C{row}").Value.ToString()).Font(font);
-                    
+
                     table.Rows[rowTable].Cells[2].Paragraphs[0].Append(getValueFromFormula(ws.Cell($"G{row}").FormulaA1, wsMeta)).Font(font);
                     table.Rows[rowTable].Cells[3].Paragraphs[0].Append(getValueFromFormula(ws.Cell($"H{row}").FormulaA1, wsMeta)).Font(font);
-                    
+
                     table.Rows[rowTable].Cells[4].Paragraphs[0].Append(getValueFromFormula(ws.Cell($"I{row}").FormulaA1, wsMeta)).Font(font);
                     table.Rows[rowTable].Cells[5].Paragraphs[0].Append(getValueFromFormula(ws.Cell($"M{row}").FormulaA1, wsMeta)).Font(font);
                     table.Rows[rowTable].Cells[6].Paragraphs[0].Append(getValueFromFormula(ws.Cell($"N{row}").FormulaA1, wsMeta)).Font(font);
@@ -101,52 +127,51 @@ namespace Viettel_Report_Automation.Controllers
                 p.InsertTableAfterSelf(table);
 
                 // Bang trien khai xay dung tram BTS moi
-                /*  var tableBTS = doc.AddTable(5, 9);
-                  tableBTS.Design = TableDesign.TableGrid;
-                  tableBTS.MergeCellsInColumn(0, 0, 1);
-                  tableBTS.MergeCellsInColumn(1, 0, 1);
-                  tableBTS.MergeCellsInColumn(2, 0, 1);
-                  tableBTS.Rows[0].MergeCells(3, 5);
-                  tableBTS.Rows[0].MergeCells(4, 6);
-                  tableBTS.Rows[0].Cells[0].Paragraphs[0].Append(@"STT").Font(font).Bold();
-                  tableBTS.Rows[0].Cells[1].Paragraphs[0].Append(@"Đối tác XHH").Font(font).Bold();
-                  tableBTS.Rows[0].Cells[2].Paragraphs[0].Append(@"Quỹ trạm năm 2025").Font(font).Bold();
-                  tableBTS.Rows[0].Cells[3].Paragraphs[0].Append(@"Tiến độ hiện tại").Font(font).Bold();
-                  tableBTS.Rows[0].Cells[4].Paragraphs[0].Append(@"Còn lại thực hiện").Font(font).Bold();
+                var tableBTS = doc.AddTable(5, 9);
+                tableBTS.Design = TableDesign.TableGrid;
+                tableBTS.MergeCellsInColumn(0, 0, 1);
+                tableBTS.MergeCellsInColumn(1, 0, 1);
+                tableBTS.MergeCellsInColumn(2, 0, 1);
+                tableBTS.Rows[0].MergeCells(3, 5);
+                tableBTS.Rows[0].MergeCells(4, 6);
+                tableBTS.Rows[0].Cells[0].Paragraphs[0].Append(@"STT").Font(font).Bold();
+                tableBTS.Rows[0].Cells[1].Paragraphs[0].Append(@"Đối tác XHH").Font(font).Bold();
+                tableBTS.Rows[0].Cells[2].Paragraphs[0].Append(@"Quỹ trạm năm 2025").Font(font).Bold();
+                tableBTS.Rows[0].Cells[3].Paragraphs[0].Append(@"Tiến độ hiện tại").Font(font).Bold();
+                tableBTS.Rows[0].Cells[4].Paragraphs[0].Append(@"Còn lại thực hiện").Font(font).Bold();
 
-                  tableBTS.Rows[1].Cells[3].Paragraphs[0].Append(@"Thuê").Font(font).Bold();
-                  tableBTS.Rows[1].Cells[4].Paragraphs[0].Append(@"Khởi công").Font(font).Bold();
-                  tableBTS.Rows[1].Cells[5].Paragraphs[0].Append(@"ĐBHT").Font(font).Bold();
-                  tableBTS.Rows[1].Cells[6].Paragraphs[0].Append(@"Thuê").Font(font).Bold();
-                  tableBTS.Rows[1].Cells[7].Paragraphs[0].Append(@"Khởi công").Font(font).Bold();
-                  tableBTS.Rows[1].Cells[8].Paragraphs[0].Append(@"ĐBHT").Font(font).Bold();
+                tableBTS.Rows[1].Cells[3].Paragraphs[0].Append(@"Thuê").Font(font).Bold();
+                tableBTS.Rows[1].Cells[4].Paragraphs[0].Append(@"Khởi công").Font(font).Bold();
+                tableBTS.Rows[1].Cells[5].Paragraphs[0].Append(@"ĐBHT").Font(font).Bold();
+                tableBTS.Rows[1].Cells[6].Paragraphs[0].Append(@"Thuê").Font(font).Bold();
+                tableBTS.Rows[1].Cells[7].Paragraphs[0].Append(@"Khởi công").Font(font).Bold();
+                tableBTS.Rows[1].Cells[8].Paragraphs[0].Append(@"ĐBHT").Font(font).Bold();
 
-                  tableBTS.Rows[0].Cells[0].Paragraphs[0].Alignment = Alignment.center;
-                  tableBTS.Rows[0].Cells[1].Paragraphs[0].Alignment = Alignment.center;
-                  tableBTS.Rows[0].Cells[2].Paragraphs[0].Alignment = Alignment.center;
-                  tableBTS.Rows[0].Cells[3].Paragraphs[0].Alignment = Alignment.center;
-                  tableBTS.Rows[0].Cells[4].Paragraphs[0].Alignment = Alignment.center;
-                  tableBTS.Rows[1].Cells[3].Paragraphs[0].Alignment = Alignment.center;
-                  tableBTS.Rows[1].Cells[4].Paragraphs[0].Alignment = Alignment.center;
-                  tableBTS.Rows[1].Cells[5].Paragraphs[0].Alignment = Alignment.center;
-                  tableBTS.Rows[1].Cells[6].Paragraphs[0].Alignment = Alignment.center;
-                  tableBTS.Rows[1].Cells[7].Paragraphs[0].Alignment = Alignment.center;
-                  tableBTS.Rows[1].Cells[8].Paragraphs[0].Alignment = Alignment.center;
+                tableBTS.Rows[0].Cells[0].Paragraphs[0].Alignment = Alignment.center;
+                tableBTS.Rows[0].Cells[1].Paragraphs[0].Alignment = Alignment.center;
+                tableBTS.Rows[0].Cells[2].Paragraphs[0].Alignment = Alignment.center;
+                tableBTS.Rows[0].Cells[3].Paragraphs[0].Alignment = Alignment.center;
+                tableBTS.Rows[0].Cells[4].Paragraphs[0].Alignment = Alignment.center;
+                tableBTS.Rows[1].Cells[3].Paragraphs[0].Alignment = Alignment.center;
+                tableBTS.Rows[1].Cells[4].Paragraphs[0].Alignment = Alignment.center;
+                tableBTS.Rows[1].Cells[5].Paragraphs[0].Alignment = Alignment.center;
+                tableBTS.Rows[1].Cells[6].Paragraphs[0].Alignment = Alignment.center;
+                tableBTS.Rows[1].Cells[7].Paragraphs[0].Alignment = Alignment.center;
+                tableBTS.Rows[1].Cells[8].Paragraphs[0].Alignment = Alignment.center;
 
-                  tableBTS.Rows[2].Cells[0].Paragraphs[0].Append("1");
-                  tableBTS.Rows[3].Cells[0].Paragraphs[0].Append("2");
+                tableBTS.Rows[2].Cells[0].Paragraphs[0].Append("1");
+                tableBTS.Rows[3].Cells[0].Paragraphs[0].Append("2");
 
-                  tableBTS.Rows[2].Cells[1].Paragraphs[0].Append("DLK");
-                  tableBTS.Rows[3].Cells[1].Paragraphs[0].Append("PYN");
+                tableBTS.Rows[2].Cells[1].Paragraphs[0].Append("DLK");
+                tableBTS.Rows[3].Cells[1].Paragraphs[0].Append("PYN");
 
-                  tableBTS.Rows[2].Cells[2].Paragraphs[0].Append("20");
-                  tableBTS.Rows[3].Cells[2].Paragraphs[0].Append("88");
+                tableBTS.Rows[2].Cells[2].Paragraphs[0].Append("20");
+                tableBTS.Rows[3].Cells[2].Paragraphs[0].Append("88");
 
-                  tableBTS.Rows[4].Cells[1].Paragraphs[0].Append("Tổng");
-                  p = doc.Paragraphs.Where(s => s.Text.Contains("{t_trienkhaixaydungbtsmoi}")).First();
-                  p.ReplaceText("{t_trienkhaixaydungbtsmoi}", "");
-                  p.InsertTableAfterSelf(tableBTS);
-                */
+                tableBTS.Rows[4].Cells[1].Paragraphs[0].Append("Tổng");
+                p = doc.Paragraphs.Where(s => s.Text.Contains("{t_trienkhaixaydungbtsmoi}")).First();
+                p.ReplaceText("{t_trienkhaixaydungbtsmoi}", "");
+                p.InsertTableAfterSelf(tableBTS);
 
                 wb.Dispose();
                 doc.Save();
@@ -164,6 +189,6 @@ namespace Viettel_Report_Automation.Controllers
             }
             return "0";
         }
-        
+
     }
 }

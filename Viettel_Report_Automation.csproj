@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <None Update="Files\ChamdiemKPI.xlsx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="Files\Tonghopquy.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
