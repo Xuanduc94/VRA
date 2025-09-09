@@ -8,6 +8,11 @@
         SizeToContent="WidthAndHeight"
         Title="Tự động hoá báo cáo" MaxHeight="300" MaxWidth="600" WindowStartupLocation="CenterScreen">
     <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Menu Background="LightGray">
+                <MenuItem Header="Trợ giúp" x:Name="btnHelp" Click="btnHelp_Click" />
+            </Menu>
+        </StackPanel>
         <StackPanel  Orientation="Horizontal" x:Name="excel_area">
             <Label Width="150" Content="File Excel KPI tháng "/>
             <Label Style="{StaticResource labelNormal}" Width="100" x:Name="lbl_fileName_excel" Content="File được chọn"/>

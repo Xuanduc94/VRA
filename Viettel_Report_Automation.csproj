@@ -29,6 +29,9 @@
     <None Update="Files\ChamdiemKPI.xlsx">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
+    <None Update="Files\help.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Files\Tonghopquy.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

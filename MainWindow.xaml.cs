@@ -109,5 +109,11 @@ namespace Viettel_Report_Automation
 
             }
         }
+
+        private void btnHelp_Click(object sender, RoutedEventArgs e)
+        {
+            Help help = new Help();
+            help.ShowDialog();
+        }
     }
 }

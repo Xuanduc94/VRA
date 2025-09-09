@@ -1,6 +1,7 @@
 ﻿using ClosedXML.Excel;
 using System.Data;
 using System.IO;
+using System.Windows.Controls;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
 
@@ -8,7 +9,237 @@ namespace Viettel_Report_Automation.Controllers
 {
     public class WordReportController
     {
+        private void hatangdidong(DocX doc)
+        {
+            var tableMobileNetwork = doc.AddTable(1, 5);
+            tableMobileNetwork.Design = TableDesign.TableGrid;
 
+            tableMobileNetwork.Rows[0].Cells[0].Paragraphs[0].Append("Nhà mạng");
+            tableMobileNetwork.Rows[0].Cells[1].Paragraphs[0].Append("Viettel");
+            tableMobileNetwork.Rows[0].Cells[2].Paragraphs[0].Append("Mobi");
+            tableMobileNetwork.Rows[0].Cells[3].Paragraphs[0].Append("Vina");
+            tableMobileNetwork.Rows[0].Cells[4].Paragraphs[0].Append("Tổng ba nhà mạng");
+            tableMobileNetwork.InsertRow();
+            tableMobileNetwork.Rows[1].Cells[0].Paragraphs[0].Append("Tổng vị trí");
+            tableMobileNetwork.Rows[1].Cells[1].Paragraphs[0].Append("1667");
+            tableMobileNetwork.Rows[1].Cells[2].Paragraphs[0].Append("3342");
+            tableMobileNetwork.Rows[1].Cells[3].Paragraphs[0].Append("345");
+            tableMobileNetwork.Rows[1].Cells[4].Paragraphs[0].Append("6657");
+            tableMobileNetwork.InsertRow();
+            tableMobileNetwork.Rows[2].Cells[0].Paragraphs[0].Append("%");
+            tableMobileNetwork.Rows[2].Cells[1].Paragraphs[0].Append("19%");
+            tableMobileNetwork.Rows[2].Cells[2].Paragraphs[0].Append("26%");
+            tableMobileNetwork.Rows[2].Cells[3].Paragraphs[0].Append("55%");
+            tableMobileNetwork.Rows[2].Cells[4].Paragraphs[0].Append("100%");
+            tableMobileNetwork.InsertRow();
+            tableMobileNetwork.Rows[3].Cells[0].Paragraphs[0].Append("Trạm 2G");
+            tableMobileNetwork.Rows[3].Cells[1].Paragraphs[0].Append("845");
+            tableMobileNetwork.Rows[3].Cells[2].Paragraphs[0].Append("644");
+            tableMobileNetwork.Rows[3].Cells[3].Paragraphs[0].Append("785");
+            tableMobileNetwork.Rows[3].Cells[4].Paragraphs[0].Append("2274");
+            tableMobileNetwork.InsertRow();
+
+            tableMobileNetwork.Rows[4].Cells[0].Paragraphs[0].Append("Trạm 3G");
+            tableMobileNetwork.Rows[4].Cells[1].Paragraphs[0].Append("845");
+            tableMobileNetwork.Rows[4].Cells[2].Paragraphs[0].Append("644");
+            tableMobileNetwork.Rows[4].Cells[3].Paragraphs[0].Append("785");
+            tableMobileNetwork.Rows[4].Cells[4].Paragraphs[0].Append("2274");
+            tableMobileNetwork.InsertRow();
+            tableMobileNetwork.Rows[5].Cells[0].Paragraphs[0].Append("%");
+            tableMobileNetwork.Rows[5].Cells[1].Paragraphs[0].Append("19%");
+            tableMobileNetwork.Rows[5].Cells[2].Paragraphs[0].Append("26%");
+            tableMobileNetwork.Rows[5].Cells[3].Paragraphs[0].Append("55%");
+            tableMobileNetwork.Rows[5].Cells[4].Paragraphs[0].Append("100%");
+            tableMobileNetwork.InsertRow();
+
+            tableMobileNetwork.Rows[6].Cells[0].Paragraphs[0].Append("Trạm 4G");
+            tableMobileNetwork.Rows[6].Cells[1].Paragraphs[0].Append("845");
+            tableMobileNetwork.Rows[6].Cells[2].Paragraphs[0].Append("644");
+            tableMobileNetwork.Rows[6].Cells[3].Paragraphs[0].Append("785");
+            tableMobileNetwork.Rows[6].Cells[4].Paragraphs[0].Append("2274");
+            tableMobileNetwork.InsertRow();
+            tableMobileNetwork.Rows[7].Cells[0].Paragraphs[0].Append("%");
+            tableMobileNetwork.Rows[7].Cells[1].Paragraphs[0].Append("19%");
+            tableMobileNetwork.Rows[7].Cells[2].Paragraphs[0].Append("26%");
+            tableMobileNetwork.Rows[7].Cells[3].Paragraphs[0].Append("55%");
+            tableMobileNetwork.Rows[7].Cells[4].Paragraphs[0].Append("100%");
+            tableMobileNetwork.InsertRow();
+
+            tableMobileNetwork.Rows[8].Cells[0].Paragraphs[0].Append("Trạm 5G");
+            tableMobileNetwork.Rows[8].Cells[1].Paragraphs[0].Append("845");
+            tableMobileNetwork.Rows[8].Cells[2].Paragraphs[0].Append("644");
+            tableMobileNetwork.Rows[8].Cells[3].Paragraphs[0].Append("785");
+            tableMobileNetwork.Rows[8].Cells[4].Paragraphs[0].Append("2274");
+            tableMobileNetwork.InsertRow();
+            tableMobileNetwork.Rows[9].Cells[0].Paragraphs[0].Append("%");
+            tableMobileNetwork.Rows[9].Cells[1].Paragraphs[0].Append("19%");
+            tableMobileNetwork.Rows[9].Cells[2].Paragraphs[0].Append("26%");
+            tableMobileNetwork.Rows[9].Cells[3].Paragraphs[0].Append("55%");
+            tableMobileNetwork.Rows[9].Cells[4].Paragraphs[0].Append("100%");
+
+            var p = doc.Paragraphs.Where(s => s.Text.Contains("{banghatangdidong}")).FirstOrDefault();
+            p.InsertTableAfterSelf(tableMobileNetwork);
+            p.ReplaceText("{banghatangdidong}", "");
+        }
+
+        private void bangchitieuhatang(DocX doc, IXLWorksheet ws, IXLWorksheet wsMeta)
+        {
+            string font = "Times New Roman";
+            var table = doc.AddTable(2, 11);
+            table.Design = TableDesign.TableGrid;
+            table.MergeCellsInColumn(0, 0, 1);
+            table.MergeCellsInColumn(1, 0, 1);
+            table.MergeCellsInColumn(2, 0, 1);
+            table.MergeCellsInColumn(3, 0, 1);
+            table.MergeCellsInColumn(4, 0, 1);
+            table.Rows[0].MergeCells(5, 7);
+            table.Rows[0].MergeCells(6, 8);
+
+            table.Rows[0].Cells[0].Paragraphs[0].Append(@"Các chỉ tiêu triển khai hạ tầng chính").Font(font).Bold();
+            table.Rows[0].Cells[1].Paragraphs[0].Append(@"ĐVT").Font(font).Bold();
+            table.Rows[0].Cells[2].Paragraphs[0].Append(@"Kế hoạch T7").Font(font).Bold();
+            table.Rows[0].Cells[3].Paragraphs[0].Append(@"Thực hiện T7").Font(font).Bold();
+            table.Rows[0].Cells[4].Paragraphs[0].Append(@"%TH").Font(font).Bold();
+            table.Rows[0].Cells[5].Paragraphs[0].Append(@"Thực hiện năm 2025").Font(font).Bold();
+            table.Rows[0].Cells[6].Paragraphs[0].Append(@"Thực hiện năm 2024").Font(font).Bold();
+
+            table.Rows[1].Cells[5].Paragraphs[0].Append(@"Kế hoạch").Font(font).Bold();
+            table.Rows[1].Cells[6].Paragraphs[0].Append(@"Thực hiện").Font(font).Bold();
+            table.Rows[1].Cells[7].Paragraphs[0].Append(@"%TH").Font(font).Bold();
+
+            table.Rows[1].Cells[8].Paragraphs[0].Append(@"Kế hoạch").Font(font).Bold();
+            table.Rows[1].Cells[9].Paragraphs[0].Append(@"Thực hiện").Font(font).Bold();
+            table.Rows[1].Cells[10].Paragraphs[0].Append(@"%TH").Font(font).Bold();
+            /*-----------------------------------------------------------------------*/
+            table.Rows[0].Cells[0].Paragraphs[0].Alignment = Alignment.center;
+            table.Rows[0].Cells[1].Paragraphs[0].Alignment = Alignment.center;
+            table.Rows[0].Cells[2].Paragraphs[0].Alignment = Alignment.center;
+            table.Rows[0].Cells[3].Paragraphs[0].Alignment = Alignment.center;
+            table.Rows[0].Cells[4].Paragraphs[0].Alignment = Alignment.center;
+            table.Rows[0].Cells[5].Paragraphs[0].Alignment = Alignment.center;
+            table.Rows[0].Cells[6].Paragraphs[0].Alignment = Alignment.center;
+
+            table.Rows[1].Cells[5].Paragraphs[0].Alignment = Alignment.center;
+            table.Rows[1].Cells[6].Paragraphs[0].Alignment = Alignment.center;
+            table.Rows[1].Cells[7].Paragraphs[0].Alignment = Alignment.center;
+
+            table.Rows[1].Cells[8].Paragraphs[0].Alignment = Alignment.center;
+            table.Rows[1].Cells[9].Paragraphs[0].Alignment = Alignment.center;
+            table.Rows[1].Cells[10].Paragraphs[0].Alignment = Alignment.center;
+
+            /*-----------------------------------------------------------------------*/
+
+            int rowTable = 2;
+            for (int row = 3; row < ws.RowsUsed().Count(); row++)
+            {
+                table.InsertRow();
+                string dauMuc = ws.Cell($"B{row}").Value.ToString();
+                table.Rows[rowTable].Cells[0].Paragraphs[0].Append(dauMuc).Font(font);
+                table.Rows[rowTable].Cells[1].Paragraphs[0].Append(ws.Cell($"C{row}").Value.ToString()).Font(font);
+
+                table.Rows[rowTable].Cells[2].Paragraphs[0].Append(getValueFromFormula(ws.Cell($"G{row}").FormulaA1, wsMeta)).Font(font);
+                table.Rows[rowTable].Cells[3].Paragraphs[0].Append(getValueFromFormula(ws.Cell($"H{row}").FormulaA1, wsMeta)).Font(font);
+
+                table.Rows[rowTable].Cells[4].Paragraphs[0].Append(getValueFromFormula(ws.Cell($"I{row}").FormulaA1, wsMeta)).Font(font);
+                table.Rows[rowTable].Cells[5].Paragraphs[0].Append(getValueFromFormula(ws.Cell($"M{row}").FormulaA1, wsMeta)).Font(font);
+                table.Rows[rowTable].Cells[6].Paragraphs[0].Append(getValueFromFormula(ws.Cell($"N{row}").FormulaA1, wsMeta)).Font(font);
+                table.Rows[rowTable].Cells[7].Paragraphs[0].Append(getValueFromFormula(ws.Cell($"O{row}").FormulaA1, wsMeta)).Font(font);
+                //table.Rows[row].Cells[8].Paragraphs[0].Append(ws.Cell($"B{row}").Value.ToString()).Font(font);
+                //table.Rows[row].Cells[9].Paragraphs[0].Append(ws.Cell($"B{row}").Value.ToString()).Font(font);
+                //table.Rows[row].Cells[10].Paragraphs[0].Append(ws.Cell($"B{row}").Value.ToString()).Font(font);
+                rowTable++;
+            }
+
+            var t = doc.Paragraphs.Where(s => s.Text.Contains("{bangchitieu}")).FirstOrDefault();
+            t.ReplaceText("{bangchitieu}", "");
+            t.InsertTableAfterSelf(table);
+        }
+
+        public void trienkhaiBTS(DocX doc)
+        {
+            // Bang trien khai xay dung tram BTS moi
+            string font = "Times New Roman";
+            var tableBTS = doc.AddTable(5, 9);
+            tableBTS.Design = TableDesign.TableGrid;
+            tableBTS.MergeCellsInColumn(0, 0, 1);
+            tableBTS.MergeCellsInColumn(1, 0, 1);
+            tableBTS.MergeCellsInColumn(2, 0, 1);
+            tableBTS.Rows[0].MergeCells(3, 5);
+            tableBTS.Rows[0].MergeCells(4, 6);
+            tableBTS.Rows[0].Cells[0].Paragraphs[0].Append(@"STT").Font(font).Bold();
+            tableBTS.Rows[0].Cells[1].Paragraphs[0].Append(@"Đối tác XHH").Font(font).Bold();
+            tableBTS.Rows[0].Cells[2].Paragraphs[0].Append(@"Quỹ trạm năm 2025").Font(font).Bold();
+            tableBTS.Rows[0].Cells[3].Paragraphs[0].Append(@"Tiến độ hiện tại").Font(font).Bold();
+            tableBTS.Rows[0].Cells[4].Paragraphs[0].Append(@"Còn lại thực hiện").Font(font).Bold();
+
+            tableBTS.Rows[1].Cells[3].Paragraphs[0].Append(@"Thuê").Font(font).Bold();
+            tableBTS.Rows[1].Cells[4].Paragraphs[0].Append(@"Khởi công").Font(font).Bold();
+            tableBTS.Rows[1].Cells[5].Paragraphs[0].Append(@"ĐBHT").Font(font).Bold();
+            tableBTS.Rows[1].Cells[6].Paragraphs[0].Append(@"Thuê").Font(font).Bold();
+            tableBTS.Rows[1].Cells[7].Paragraphs[0].Append(@"Khởi công").Font(font).Bold();
+            tableBTS.Rows[1].Cells[8].Paragraphs[0].Append(@"ĐBHT").Font(font).Bold();
+
+            tableBTS.Rows[0].Cells[0].Paragraphs[0].Alignment = Alignment.center;
+            tableBTS.Rows[0].Cells[1].Paragraphs[0].Alignment = Alignment.center;
+            tableBTS.Rows[0].Cells[2].Paragraphs[0].Alignment = Alignment.center;
+            tableBTS.Rows[0].Cells[3].Paragraphs[0].Alignment = Alignment.center;
+            tableBTS.Rows[0].Cells[4].Paragraphs[0].Alignment = Alignment.center;
+            tableBTS.Rows[1].Cells[3].Paragraphs[0].Alignment = Alignment.center;
+            tableBTS.Rows[1].Cells[4].Paragraphs[0].Alignment = Alignment.center;
+            tableBTS.Rows[1].Cells[5].Paragraphs[0].Alignment = Alignment.center;
+            tableBTS.Rows[1].Cells[6].Paragraphs[0].Alignment = Alignment.center;
+            tableBTS.Rows[1].Cells[7].Paragraphs[0].Alignment = Alignment.center;
+            tableBTS.Rows[1].Cells[8].Paragraphs[0].Alignment = Alignment.center;
+
+            tableBTS.Rows[2].Cells[0].Paragraphs[0].Append("1");
+            tableBTS.Rows[3].Cells[0].Paragraphs[0].Append("2");
+
+            tableBTS.Rows[2].Cells[1].Paragraphs[0].Append("DLK");
+            tableBTS.Rows[3].Cells[1].Paragraphs[0].Append("PYN");
+
+            tableBTS.Rows[2].Cells[2].Paragraphs[0].Append("20");
+            tableBTS.Rows[3].Cells[2].Paragraphs[0].Append("88");
+
+            tableBTS.Rows[4].Cells[1].Paragraphs[0].Append("Tổng");
+            var b = doc.Paragraphs.Where(s => s.Text.Contains("{t_trienkhaixaydungbtsmoi}")).First();
+            b.ReplaceText("{t_trienkhaixaydungbtsmoi}", "");
+            b.InsertTableAfterSelf(tableBTS);
+        }
+
+        private void soluongtramtheothuphu(DocX doc)
+        {
+            // Danh gia so luong tram theo thu phu va nong thon
+            var tableDG = doc.AddTable(4, 5);
+            tableDG.Design = TableDesign.TableGrid;
+
+            tableDG.Rows[0].Cells[0].Paragraphs[0].Append("Nhà mạng");
+            tableDG.Rows[0].Cells[1].Paragraphs[0].Append("Viettel");
+            tableDG.Rows[0].Cells[2].Paragraphs[0].Append("Mobi");
+            tableDG.Rows[0].Cells[3].Paragraphs[0].Append("Vina");
+            tableDG.Rows[0].Cells[4].Paragraphs[0].Append("Tổng ba nhà mạng");
+
+            tableDG.Rows[1].Cells[0].Paragraphs[0].Append("Tổng vị trí");
+            tableDG.Rows[1].Cells[1].Paragraphs[0].Append("1667");
+            tableDG.Rows[1].Cells[2].Paragraphs[0].Append("3342");
+            tableDG.Rows[1].Cells[3].Paragraphs[0].Append("345");
+            tableDG.Rows[1].Cells[4].Paragraphs[0].Append("6657");
+
+            tableDG.Rows[2].Cells[0].Paragraphs[0].Append("Thủ phủ");
+            tableDG.Rows[2].Cells[1].Paragraphs[0].Append("6665");
+            tableDG.Rows[2].Cells[2].Paragraphs[0].Append("998");
+            tableDG.Rows[2].Cells[3].Paragraphs[0].Append("557");
+            tableDG.Rows[2].Cells[4].Paragraphs[0].Append("54");
+
+            tableDG.Rows[3].Cells[0].Paragraphs[0].Append("Nông thôn");
+            tableDG.Rows[3].Cells[1].Paragraphs[0].Append("845");
+            tableDG.Rows[3].Cells[2].Paragraphs[0].Append("644");
+            tableDG.Rows[3].Cells[3].Paragraphs[0].Append("785");
+            tableDG.Rows[3].Cells[4].Paragraphs[0].Append("2274");
+
+            var m = doc.Paragraphs.FirstOrDefault(s => s.Text.Contains("{soluongtramtheothuphu}"));
+            m.InsertTableAfterSelf(tableDG);
+            m.ReplaceText("{soluongtramtheothuphu}", "");
+        }
         public void generateWordFile(IProgress<string> progress, string fileTheoDoi = "", string sheetTheoDoi = "")
         {
             progress.Report("Đang tạo báo cáo word");
@@ -23,158 +254,20 @@ namespace Viettel_Report_Automation.Controllers
 
             using (var doc = DocX.Load(wordPath))
             {
-                string font = "Times New Roman";
+
                 doc.ReplaceText("{thang}", "08");
                 doc.ReplaceText("{nam}", "2025");
 
                 doc.ReplaceText("{nhanxet01}", "Vị trí trạm hiện tại Viettel đang chiếm ưu thế với 1633 vị trí. Số lượng vị trí trạm Viettel nhiều hơn Vinaphone 240 vị trí và nhiều hơn Mobifone 510 vị trí. Xét về mức huyện Viettel còn 4 huyện có vị trí trạm ít hơn nhà mạng Vina là Krông Bông ít hơn 4 vị trí, Huyện Ea Súp và Krông Búk ít hơn 1 vị trí, huyện Ea Súp ít hơn 5 trạm");
                 doc.ReplaceText("{h_ketquathuchien6thang}", "KẾT QUẢ THỰC HIỆN 6 THÁNG ĐẦU NĂM 2025");
-               
-               /* var tableMobileNetwork = doc.AddTable(2, 5);
-                tableMobileNetwork.Design = TableDesign.TableGrid;
-                tableMobileNetwork.Rows[0].Cells[0].Paragraphs[0].Append("Nhà mạng");
-                tableMobileNetwork.Rows[0].Cells[1].Paragraphs[0].Append("Viettel");
-                tableMobileNetwork.Rows[0].Cells[2].Paragraphs[0].Append("Mobi");
-                tableMobileNetwork.Rows[0].Cells[3].Paragraphs[0].Append("Vina");
-                tableMobileNetwork.Rows[0].Cells[4].Paragraphs[0].Append("Tổng ba nhà mạng");
 
-                tableMobileNetwork.Rows[1].Cells[0].Paragraphs[0].Append("Tổng vị trí");
-                tableMobileNetwork.Rows[1].Cells[1].Paragraphs[0].Append("1667");
-                tableMobileNetwork.Rows[1].Cells[2].Paragraphs[0].Append("3342");
-                tableMobileNetwork.Rows[1].Cells[3].Paragraphs[0].Append("345");
-                tableMobileNetwork.Rows[1].Cells[4].Paragraphs[0].Append("6657");
-
-                tableMobileNetwork.Rows[2].Cells[0].Paragraphs[0].Append("%");
-                tableMobileNetwork.Rows[2].Cells[1].Paragraphs[0].Append("19%");
-                tableMobileNetwork.Rows[2].Cells[2].Paragraphs[0].Append("26%");
-                tableMobileNetwork.Rows[2].Cells[3].Paragraphs[0].Append("55%");
-                tableMobileNetwork.Rows[2].Cells[4].Paragraphs[0].Append("100%");
-
-                tableMobileNetwork.Rows[3].Cells[0].Paragraphs[0].Append("Trạm 2G");
-                tableMobileNetwork.Rows[3].Cells[1].Paragraphs[0].Append("845");
-                tableMobileNetwork.Rows[3].Cells[2].Paragraphs[0].Append("644");
-                tableMobileNetwork.Rows[3].Cells[3].Paragraphs[0].Append("785");
-                tableMobileNetwork.Rows[3].Cells[4].Paragraphs[0].Append("2274");*/
-
-                // tao bang
-                var table = doc.AddTable(2, 11);
-                table.Design = TableDesign.TableGrid;
-                table.MergeCellsInColumn(0, 0, 1);
-                table.MergeCellsInColumn(1, 0, 1);
-                table.MergeCellsInColumn(2, 0, 1);
-                table.MergeCellsInColumn(3, 0, 1);
-                table.MergeCellsInColumn(4, 0, 1);
-                table.Rows[0].MergeCells(5, 7);
-                table.Rows[0].MergeCells(6, 8);
-
-                table.Rows[0].Cells[0].Paragraphs[0].Append(@"Các chỉ tiêu triển khai hạ tầng chính").Font(font).Bold();
-                table.Rows[0].Cells[1].Paragraphs[0].Append(@"ĐVT").Font(font).Bold();
-                table.Rows[0].Cells[2].Paragraphs[0].Append(@"Kế hoạch T7").Font(font).Bold();
-                table.Rows[0].Cells[3].Paragraphs[0].Append(@"Thực hiện T7").Font(font).Bold();
-                table.Rows[0].Cells[4].Paragraphs[0].Append(@"%TH").Font(font).Bold();
-                table.Rows[0].Cells[5].Paragraphs[0].Append(@"Thực hiện năm 2025").Font(font).Bold();
-                table.Rows[0].Cells[6].Paragraphs[0].Append(@"Thực hiện năm 2024").Font(font).Bold();
-
-                table.Rows[1].Cells[5].Paragraphs[0].Append(@"Kế hoạch").Font(font).Bold();
-                table.Rows[1].Cells[6].Paragraphs[0].Append(@"Thực hiện").Font(font).Bold();
-                table.Rows[1].Cells[7].Paragraphs[0].Append(@"%TH").Font(font).Bold();
-
-                table.Rows[1].Cells[8].Paragraphs[0].Append(@"Kế hoạch").Font(font).Bold();
-                table.Rows[1].Cells[9].Paragraphs[0].Append(@"Thực hiện").Font(font).Bold();
-                table.Rows[1].Cells[10].Paragraphs[0].Append(@"%TH").Font(font).Bold();
-                /*-----------------------------------------------------------------------*/
-                table.Rows[0].Cells[0].Paragraphs[0].Alignment = Alignment.center;
-                table.Rows[0].Cells[1].Paragraphs[0].Alignment = Alignment.center;
-                table.Rows[0].Cells[2].Paragraphs[0].Alignment = Alignment.center;
-                table.Rows[0].Cells[3].Paragraphs[0].Alignment = Alignment.center;
-                table.Rows[0].Cells[4].Paragraphs[0].Alignment = Alignment.center;
-                table.Rows[0].Cells[5].Paragraphs[0].Alignment = Alignment.center;
-                table.Rows[0].Cells[6].Paragraphs[0].Alignment = Alignment.center;
-
-                table.Rows[1].Cells[5].Paragraphs[0].Alignment = Alignment.center;
-                table.Rows[1].Cells[6].Paragraphs[0].Alignment = Alignment.center;
-                table.Rows[1].Cells[7].Paragraphs[0].Alignment = Alignment.center;
-
-                table.Rows[1].Cells[8].Paragraphs[0].Alignment = Alignment.center;
-                table.Rows[1].Cells[9].Paragraphs[0].Alignment = Alignment.center;
-                table.Rows[1].Cells[10].Paragraphs[0].Alignment = Alignment.center;
-
-                /*-----------------------------------------------------------------------*/
-
-                int rowTable = 2;
-                for (int row = 3; row < ws.RowsUsed().Count(); row++)
-                {
-                    table.InsertRow();
-                    string dauMuc = ws.Cell($"B{row}").Value.ToString();
-                    table.Rows[rowTable].Cells[0].Paragraphs[0].Append(dauMuc).Font(font);
-                    table.Rows[rowTable].Cells[1].Paragraphs[0].Append(ws.Cell($"C{row}").Value.ToString()).Font(font);
-
-                    table.Rows[rowTable].Cells[2].Paragraphs[0].Append(getValueFromFormula(ws.Cell($"G{row}").FormulaA1, wsMeta)).Font(font);
-                    table.Rows[rowTable].Cells[3].Paragraphs[0].Append(getValueFromFormula(ws.Cell($"H{row}").FormulaA1, wsMeta)).Font(font);
-
-                    table.Rows[rowTable].Cells[4].Paragraphs[0].Append(getValueFromFormula(ws.Cell($"I{row}").FormulaA1, wsMeta)).Font(font);
-                    table.Rows[rowTable].Cells[5].Paragraphs[0].Append(getValueFromFormula(ws.Cell($"M{row}").FormulaA1, wsMeta)).Font(font);
-                    table.Rows[rowTable].Cells[6].Paragraphs[0].Append(getValueFromFormula(ws.Cell($"N{row}").FormulaA1, wsMeta)).Font(font);
-                    table.Rows[rowTable].Cells[7].Paragraphs[0].Append(getValueFromFormula(ws.Cell($"O{row}").FormulaA1, wsMeta)).Font(font);
-                    //table.Rows[row].Cells[8].Paragraphs[0].Append(ws.Cell($"B{row}").Value.ToString()).Font(font);
-                    //table.Rows[row].Cells[9].Paragraphs[0].Append(ws.Cell($"B{row}").Value.ToString()).Font(font);
-                    //table.Rows[row].Cells[10].Paragraphs[0].Append(ws.Cell($"B{row}").Value.ToString()).Font(font);
-                    rowTable++;
-                }
-
-                var p = doc.Paragraphs.Where(s => s.Text.Contains("{bangchitieu}")).FirstOrDefault();
-                p.ReplaceText("{bangchitieu}", "");
-                p.InsertTableAfterSelf(table);
-
-                // Bang trien khai xay dung tram BTS moi
-                var tableBTS = doc.AddTable(5, 9);
-                tableBTS.Design = TableDesign.TableGrid;
-                tableBTS.MergeCellsInColumn(0, 0, 1);
-                tableBTS.MergeCellsInColumn(1, 0, 1);
-                tableBTS.MergeCellsInColumn(2, 0, 1);
-                tableBTS.Rows[0].MergeCells(3, 5);
-                tableBTS.Rows[0].MergeCells(4, 6);
-                tableBTS.Rows[0].Cells[0].Paragraphs[0].Append(@"STT").Font(font).Bold();
-                tableBTS.Rows[0].Cells[1].Paragraphs[0].Append(@"Đối tác XHH").Font(font).Bold();
-                tableBTS.Rows[0].Cells[2].Paragraphs[0].Append(@"Quỹ trạm năm 2025").Font(font).Bold();
-                tableBTS.Rows[0].Cells[3].Paragraphs[0].Append(@"Tiến độ hiện tại").Font(font).Bold();
-                tableBTS.Rows[0].Cells[4].Paragraphs[0].Append(@"Còn lại thực hiện").Font(font).Bold();
-
-                tableBTS.Rows[1].Cells[3].Paragraphs[0].Append(@"Thuê").Font(font).Bold();
-                tableBTS.Rows[1].Cells[4].Paragraphs[0].Append(@"Khởi công").Font(font).Bold();
-                tableBTS.Rows[1].Cells[5].Paragraphs[0].Append(@"ĐBHT").Font(font).Bold();
-                tableBTS.Rows[1].Cells[6].Paragraphs[0].Append(@"Thuê").Font(font).Bold();
-                tableBTS.Rows[1].Cells[7].Paragraphs[0].Append(@"Khởi công").Font(font).Bold();
-                tableBTS.Rows[1].Cells[8].Paragraphs[0].Append(@"ĐBHT").Font(font).Bold();
-
-                tableBTS.Rows[0].Cells[0].Paragraphs[0].Alignment = Alignment.center;
-                tableBTS.Rows[0].Cells[1].Paragraphs[0].Alignment = Alignment.center;
-                tableBTS.Rows[0].Cells[2].Paragraphs[0].Alignment = Alignment.center;
-                tableBTS.Rows[0].Cells[3].Paragraphs[0].Alignment = Alignment.center;
-                tableBTS.Rows[0].Cells[4].Paragraphs[0].Alignment = Alignment.center;
-                tableBTS.Rows[1].Cells[3].Paragraphs[0].Alignment = Alignment.center;
-                tableBTS.Rows[1].Cells[4].Paragraphs[0].Alignment = Alignment.center;
-                tableBTS.Rows[1].Cells[5].Paragraphs[0].Alignment = Alignment.center;
-                tableBTS.Rows[1].Cells[6].Paragraphs[0].Alignment = Alignment.center;
-                tableBTS.Rows[1].Cells[7].Paragraphs[0].Alignment = Alignment.center;
-                tableBTS.Rows[1].Cells[8].Paragraphs[0].Alignment = Alignment.center;
-
-                tableBTS.Rows[2].Cells[0].Paragraphs[0].Append("1");
-                tableBTS.Rows[3].Cells[0].Paragraphs[0].Append("2");
-
-                tableBTS.Rows[2].Cells[1].Paragraphs[0].Append("DLK");
-                tableBTS.Rows[3].Cells[1].Paragraphs[0].Append("PYN");
-
-                tableBTS.Rows[2].Cells[2].Paragraphs[0].Append("20");
-                tableBTS.Rows[3].Cells[2].Paragraphs[0].Append("88");
-
-                tableBTS.Rows[4].Cells[1].Paragraphs[0].Append("Tổng");
-                p = doc.Paragraphs.Where(s => s.Text.Contains("{t_trienkhaixaydungbtsmoi}")).First();
-                p.ReplaceText("{t_trienkhaixaydungbtsmoi}", "");
-                p.InsertTableAfterSelf(tableBTS);
+                hatangdidong(doc);
+                bangchitieuhatang(doc, ws, wsMeta);
+                soluongtramtheothuphu(doc);
 
                 wb.Dispose();
                 doc.Save();
+                doc.Dispose();
             }
             progress.Report("Đã tạo file word");
         }
