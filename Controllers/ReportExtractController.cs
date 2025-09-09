@@ -1,6 +1,6 @@
 ﻿using ClosedXML.Excel;
 using System.IO;
-using System.Windows.Input;
+using System.Windows;
 using Viettel_Report_Automation.Utils;
 
 namespace Viettel_Report_Automation.Controllers
@@ -15,7 +15,6 @@ namespace Viettel_Report_Automation.Controllers
             try
             {
                 TonghopTheoDoi(fileChamdiem, fileTheodoi, fileWord, progress);
-
             }
             catch (Exception ex)
             {
@@ -26,14 +25,14 @@ namespace Viettel_Report_Automation.Controllers
 
         private void TonghopTheoDoi(string fileChamdiem, string fileTheodoi, string fileWord, IProgress<string> progress)
         {
-            progress.Report("Trích xuất file theo dõi KPI");
+           progress.Report("Trích xuất file theo dõi KPI");
             var workbookChamDiem = new XLWorkbook(fileChamdiem);
             var sheetChamDiem = workbookChamDiem.Worksheet("BC_chi_tiet");
             string monthStr = StringHelper.RemoveDiacriticsAndSpaces(sheetChamDiem.Cell("G1").Value.ToString(), false).Replace("/", ".").ToUpper();
             progress.Report("Tiến hành cấu hình");
             this.CreateMeTracking(fileTheodoi, monthStr.Trim());
             progress.Report("Tính toán dữ liệu");
-            WriteToKPIFile(fileTheodoi, fileChamdiem);
+            WriteToKPIFile(fileTheodoi, fileChamdiem, monthStr.Split(" ")[1]);
             string m = sheetChamDiem.Cell("G1").Value.ToString();
             string[] strSpilt = m.Split('/', ' ');
             int.TryParse(strSpilt[1], out int month);
@@ -45,7 +44,34 @@ namespace Viettel_Report_Automation.Controllers
             progress.Report("Tổng hợp báo cáo");
             int quater = NumberHelper.GetQuarter(month);
             MappingDataYearAndQuaterToKPI(quater, fileChamdiem);
+            MappingDataTotal(fileChamdiem);
             progress.Report("Đã tính toán xong");
+        }
+
+        private void MappingDataTotal(string fileChamDiem)
+        {
+            var workbookChamDiem = new XLWorkbook(fileChamDiem);
+            var sheetChamDiem = workbookChamDiem.Worksheet("MetaTH");
+            var wbTong = new XLWorkbook(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Files", "Tonghopquy.xlsx"));
+            var yearSheet = wbTong.Worksheet("Nam");
+            for (int row = 3; row < yearSheet.RowsUsed().Count(); row++)
+            {
+                string keyword = yearSheet.Cell($"A{row}").Value.ToString();
+                var cell = sheetChamDiem.Cells().FirstOrDefault(c => c.GetString() == keyword);
+                if (cell != null)
+                {
+                    int rowCell = cell.Address.RowNumber;
+                    // Du lieu nam 
+                    sheetChamDiem.Cell($"B{rowCell}").Value = NumberHelper.ParseStringToDouble(yearSheet.Cell($"C{row}").Value.ToString());
+                    sheetChamDiem.Cell($"C{rowCell}").Value = NumberHelper.ParseStringToDouble(yearSheet.Cell($"E{row}").Value.ToString());
+                    sheetChamDiem.Cell($"D{rowCell}").Value = NumberHelper.ParseStringToDouble(yearSheet.Cell($"G{row}").Value.ToString());
+
+                }
+            }
+
+            workbookChamDiem.Save();
+            workbookChamDiem.Dispose();
+            wbTong.Dispose();
         }
 
         private void MappingDataYearAndQuaterToKPI(int quater, string fileChamDiem)
@@ -90,7 +116,7 @@ namespace Viettel_Report_Automation.Controllers
                             break;
                     }
                 }
-              
+
             }
             workbookChamDiem.Save();
             workbookChamDiem.Dispose();
@@ -110,6 +136,7 @@ namespace Viettel_Report_Automation.Controllers
             }
 
             workbook.AddWorksheet("Meta" + m);
+            Application.Current.Properties["metaTheodoi"] = "Meta" + m;
             var sheetMeta = workbook.Worksheet("Meta" + m);
             int rowMeta = 1;
             for (int row = 5; row < worksheet.RowsUsed().Count(); row++)
@@ -128,18 +155,18 @@ namespace Viettel_Report_Automation.Controllers
             workbook.Dispose();
         }
 
-        private void WriteToKPIFile(string fileTheodoi, string fileChamdiem)
+        private void WriteToKPIFile(string fileTheodoi, string fileChamdiem, string month)
         {
             var workbook = new XLWorkbook(fileTheodoi);
-            if (workbook.Worksheets.FirstOrDefault(s => s.Name == "Meta") == null)
+            if (workbook.Worksheets.FirstOrDefault(s => s.Name == $"Meta{month}") == null)
             {
-                workbook.Worksheets.Add("Meta");
+                workbook.Worksheets.Add($"Meta{month}");
             }
-           
-            var worksheet = workbook.Worksheet("Meta");
+
+            var worksheet = workbook.Worksheet($"Meta{month}");
             var workbookKPI = new XLWorkbook(fileChamdiem);
             var worksheetKPI = workbookKPI.Worksheet("Meta");
-
+            // Chep du lieu tu file theo doi vao file kpi
             for (int row = 1; row < worksheet.RowsUsed().Count(); row++)
             {
                 string findStr = worksheet.Cell("A" + row).Value.ToString();
@@ -241,9 +268,9 @@ namespace Viettel_Report_Automation.Controllers
                             // Ghi đầu mục chỉ tiêu
                             if (cell == null)
                             {
-                                worksheetTong.Cell("A" + rowTh).Value = keyword;
+                                worksheetTong.Cell($"A{rowTh}").Value = keyword;
                                 worksheetTong.Cell($"H{rowTh}").FormulaA1 = $"=B{rowTh}+D{rowTh}+F{rowTh}";
-                                worksheetTong.Cell("I" + rowTh).FormulaA1 = $"=C{rowTh}+E{rowTh}+G{rowTh}";
+                                worksheetTong.Cell($"I{rowTh}").FormulaA1 = $"=C{rowTh}+E{rowTh}+G{rowTh}";
                                 rowTh++;
                             }
                         }
