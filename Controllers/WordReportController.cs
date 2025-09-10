@@ -2,7 +2,6 @@
 using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Windows.Controls;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
 
@@ -10,11 +9,13 @@ namespace Viettel_Report_Automation.Controllers
 {
     public class WordReportController
     {
+        private string font = "Times New Roman";
         private void hatangdidong(DocX doc)
         {
 
             var tableMobileNetwork = doc.AddTable(1, 5);
             tableMobileNetwork.Design = TableDesign.TableGrid;
+            tableMobileNetwork.Rows[0].Cells[4].Width = 250;
 
             tableMobileNetwork.Rows[0].Cells[0].Paragraphs[0].Append("Nhà mạng");
             tableMobileNetwork.Rows[0].Cells[1].Paragraphs[0].Append("Viettel");
@@ -41,71 +42,191 @@ namespace Viettel_Report_Automation.Controllers
             tableMobileNetwork.Rows[3].Cells[4].Paragraphs[0].Append("2274");
             tableMobileNetwork.InsertRow();
 
-            tableMobileNetwork.Rows[4].Cells[0].Paragraphs[0].Append("Trạm 3G");
-            tableMobileNetwork.Rows[4].Cells[1].Paragraphs[0].Append("845");
-            tableMobileNetwork.Rows[4].Cells[2].Paragraphs[0].Append("644");
-            tableMobileNetwork.Rows[4].Cells[3].Paragraphs[0].Append("785");
-            tableMobileNetwork.Rows[4].Cells[4].Paragraphs[0].Append("2274");
-            tableMobileNetwork.InsertRow();
-            tableMobileNetwork.Rows[5].Cells[0].Paragraphs[0].Append("%");
-            tableMobileNetwork.Rows[5].Cells[1].Paragraphs[0].Append("19%");
-            tableMobileNetwork.Rows[5].Cells[2].Paragraphs[0].Append("26%");
-            tableMobileNetwork.Rows[5].Cells[3].Paragraphs[0].Append("55%");
-            tableMobileNetwork.Rows[5].Cells[4].Paragraphs[0].Append("100%");
+            tableMobileNetwork.Rows[4].Cells[0].Paragraphs[0].Append("%");
+            tableMobileNetwork.Rows[4].Cells[1].Paragraphs[0].Append("19%");
+            tableMobileNetwork.Rows[4].Cells[2].Paragraphs[0].Append("26%");
+            tableMobileNetwork.Rows[4].Cells[3].Paragraphs[0].Append("55%");
+            tableMobileNetwork.Rows[4].Cells[4].Paragraphs[0].Append("100%");
             tableMobileNetwork.InsertRow();
 
-            tableMobileNetwork.Rows[6].Cells[0].Paragraphs[0].Append("Trạm 4G");
-            tableMobileNetwork.Rows[6].Cells[1].Paragraphs[0].Append("845");
-            tableMobileNetwork.Rows[6].Cells[2].Paragraphs[0].Append("644");
-            tableMobileNetwork.Rows[6].Cells[3].Paragraphs[0].Append("785");
-            tableMobileNetwork.Rows[6].Cells[4].Paragraphs[0].Append("2274");
+            tableMobileNetwork.Rows[5].Cells[0].Paragraphs[0].Append("Trạm 3G");
+            tableMobileNetwork.Rows[5].Cells[1].Paragraphs[0].Append("845");
+            tableMobileNetwork.Rows[5].Cells[2].Paragraphs[0].Append("644");
+            tableMobileNetwork.Rows[5].Cells[3].Paragraphs[0].Append("785");
+            tableMobileNetwork.Rows[5].Cells[4].Paragraphs[0].Append("2274");
             tableMobileNetwork.InsertRow();
-            tableMobileNetwork.Rows[7].Cells[0].Paragraphs[0].Append("%");
-            tableMobileNetwork.Rows[7].Cells[1].Paragraphs[0].Append("19%");
-            tableMobileNetwork.Rows[7].Cells[2].Paragraphs[0].Append("26%");
-            tableMobileNetwork.Rows[7].Cells[3].Paragraphs[0].Append("55%");
-            tableMobileNetwork.Rows[7].Cells[4].Paragraphs[0].Append("100%");
+            tableMobileNetwork.Rows[6].Cells[0].Paragraphs[0].Append("%");
+            tableMobileNetwork.Rows[6].Cells[1].Paragraphs[0].Append("19%");
+            tableMobileNetwork.Rows[6].Cells[2].Paragraphs[0].Append("26%");
+            tableMobileNetwork.Rows[6].Cells[3].Paragraphs[0].Append("55%");
+            tableMobileNetwork.Rows[6].Cells[4].Paragraphs[0].Append("100%");
             tableMobileNetwork.InsertRow();
 
-            tableMobileNetwork.Rows[8].Cells[0].Paragraphs[0].Append("Trạm 5G");
-            tableMobileNetwork.Rows[8].Cells[1].Paragraphs[0].Append("845");
-            tableMobileNetwork.Rows[8].Cells[2].Paragraphs[0].Append("644");
-            tableMobileNetwork.Rows[8].Cells[3].Paragraphs[0].Append("785");
-            tableMobileNetwork.Rows[8].Cells[4].Paragraphs[0].Append("2274");
+            tableMobileNetwork.Rows[7].Cells[0].Paragraphs[0].Append("Trạm 4G");
+            tableMobileNetwork.Rows[7].Cells[1].Paragraphs[0].Append("845");
+            tableMobileNetwork.Rows[7].Cells[2].Paragraphs[0].Append("644");
+            tableMobileNetwork.Rows[7].Cells[3].Paragraphs[0].Append("785");
+            tableMobileNetwork.Rows[7].Cells[4].Paragraphs[0].Append("2274");
             tableMobileNetwork.InsertRow();
-            tableMobileNetwork.Rows[9].Cells[0].Paragraphs[0].Append("%");
-            tableMobileNetwork.Rows[9].Cells[1].Paragraphs[0].Append("19%");
-            tableMobileNetwork.Rows[9].Cells[2].Paragraphs[0].Append("26%");
-            tableMobileNetwork.Rows[9].Cells[3].Paragraphs[0].Append("55%");
-            tableMobileNetwork.Rows[9].Cells[4].Paragraphs[0].Append("100%");
-     
+            tableMobileNetwork.Rows[8].Cells[0].Paragraphs[0].Append("%");
+            tableMobileNetwork.Rows[8].Cells[1].Paragraphs[0].Append("19%");
+            tableMobileNetwork.Rows[8].Cells[2].Paragraphs[0].Append("26%");
+            tableMobileNetwork.Rows[8].Cells[3].Paragraphs[0].Append("55%");
+            tableMobileNetwork.Rows[8].Cells[4].Paragraphs[0].Append("100%");
+            tableMobileNetwork.InsertRow();
+
+            tableMobileNetwork.Rows[9].Cells[0].Paragraphs[0].Append("Trạm 5G");
+            tableMobileNetwork.Rows[9].Cells[1].Paragraphs[0].Append("845");
+            tableMobileNetwork.Rows[9].Cells[2].Paragraphs[0].Append("644");
+            tableMobileNetwork.Rows[9].Cells[3].Paragraphs[0].Append("785");
+            tableMobileNetwork.Rows[9].Cells[4].Paragraphs[0].Append("2274");
+            tableMobileNetwork.InsertRow();
+            tableMobileNetwork.Rows[10].Cells[0].Paragraphs[0].Append("%");
+            tableMobileNetwork.Rows[10].Cells[1].Paragraphs[0].Append("19%");
+            tableMobileNetwork.Rows[10].Cells[2].Paragraphs[0].Append("26%");
+            tableMobileNetwork.Rows[10].Cells[3].Paragraphs[0].Append("55%");
+            tableMobileNetwork.Rows[10].Cells[4].Paragraphs[0].Append("100%");
+
+            for (int row = 0; row < 11; row++)
+            {
+                for (int cell = 0; cell < 5; cell++)
+                {
+                    if (row == 0)
+                    {
+                        tableMobileNetwork.Rows[row].Cells[cell].Paragraphs[0].Bold();
+                    }
+                    tableMobileNetwork.Rows[row].Cells[cell].Paragraphs[0].Alignment = Alignment.center;
+                    if (row % 2 != 0)
+                    {
+                        tableMobileNetwork.Rows[row].Cells[cell].FillColor = Color.CornflowerBlue;
+                    }
+                }
+            }
             var p = doc.Paragraphs.Where(s => s.Text.Contains("{banghatangdidong}")).ToList();
-            foreach(var item in p)
+            foreach (var item in p)
             {
                 item.InsertTableAfterSelf(tableMobileNetwork);
                 item.ReplaceText("{banghatangdidong}", "");
             }
-           
+
         }
 
-        private void vunglom(DocX doc) {
+        private void bangtruyendan(DocX doc)
+        {
+            var table = doc.AddTable(2, 9);
+           
+
+            table.Rows[0].MergeCells(1, 4);
+            table.Rows[0].MergeCells(2, 5);
+
+            table.MergeCellsInColumn(0, 0, 1);
+
+
+            for (int i = 0; i < 3; i++)
+            {
+                table.Rows[0].Cells[i].FillColor = Color.Yellow;
+
+            }
+            for (int i = 1; i < 9; i++)
+            {
+                table.Rows[1].Cells[i].FillColor = Color.Yellow;
+                table.Rows[1].Cells[i].Width = 200;
+            }
+            table.Rows[0].Cells[0].Paragraphs[0].Append("Tỉnh").Bold();
+            table.Rows[0].Cells[1].Paragraphs[0].Append("Trạm").Bold();
+            table.Rows[0].Cells[2].Paragraphs[0].Append("Cáp quang").Bold();
+
+            for (int cell = 0; cell < 3; cell++) {
+                table.Rows[0].Cells[cell].Paragraphs[0].Alignment = Alignment.center;
+                table.Rows[0].Cells[cell].Paragraphs[0].Bold(); 
+            }
+
+            table.Rows[1].Cells[1].Paragraphs[0].Append("Tổng trạm Macro");
+            table.Rows[1].Cells[2].Paragraphs[0].Append("Truyền dẫn quang");
+            table.Rows[1].Cells[3].Paragraphs[0].Append("Truyền dẫn Viba/Vsat");
+            table.Rows[1].Cells[4].Paragraphs[0].Append("Tỷ lệ trạm sử dụng viba,vsat");
+            table.Rows[1].Cells[5].Paragraphs[0].Append("Cáp treo (km)");
+            table.Rows[1].Cells[6].Paragraphs[0].Append("Cáp ngầm (km)");
+            table.Rows[1].Cells[7].Paragraphs[0].Append("Cáp OPGW");
+            table.Rows[1].Cells[8].Paragraphs[0].Append("Tổng khối lượng cáp quang (km)");
+            for (int cell = 1; cell < 9; cell++)
+            {
+                table.Rows[1].Cells[cell].Paragraphs[0].Alignment = Alignment.center;
+                table.Rows[1].Cells[cell].Paragraphs[0].Bold();
+            }
+
+            table.InsertRow();
+            table.InsertRow();
+
+            var p = doc.Paragraphs.Where(s => s.Text.Contains("{hatangtruyendan}")).FirstOrDefault();
+            if (p != null)
+            {
+                p.InsertTableAfterSelf(table);
+                p.ReplaceText("{hatangtruyendan}", "");
+            }
+
+        }
+
+        private void vunglom(DocX doc)
+        {
             var table = doc.AddTable(1, 6);
 
-            table.Rows[0].Cells[0].Paragraphs[0].Append("TT");
-            table.Rows[0].Cells[1].Paragraphs[0].Append("Tên tỉnh");
-            table.Rows[0].Cells[2].Paragraphs[0].Append("Tên huyện");
-            table.Rows[0].Cells[3].Paragraphs[0].Append("2G");
-            table.Rows[0].Cells[4].Paragraphs[0].Append("4G");
-            table.Rows[0].Cells[5].Paragraphs[0].Append("Tổng");
+            table.Rows[0].Cells[0].Paragraphs[0].Append("TT").Bold();
+            table.Rows[0].Cells[1].Paragraphs[0].Append("Tên tỉnh").Bold();
+            table.Rows[0].Cells[2].Paragraphs[0].Append("Tên huyện").Bold();
+            table.Rows[0].Cells[3].Paragraphs[0].Append("2G").Bold();
+            table.Rows[0].Cells[4].Paragraphs[0].Append("4G").Bold();
+            table.Rows[0].Cells[5].Paragraphs[0].Append("Tổng").Bold();
+            table.InsertRow();
 
             var p = doc.Paragraphs.Where(s => s.Text.Contains("{vunglom}")).FirstOrDefault();
-            p.InsertTableAfterSelf(table);
-            p.ReplaceText("{vunglom}", "");
+            if (p != null)
+            {
+                p.InsertTableAfterSelf(table);
+                p.ReplaceText("{vunglom}", "");
+            }
+
+        }
+
+        private void bangLuuluongChatluongmang(DocX doc)
+        {
+            var table = doc.AddTable(2, 11);
+            table.Rows[0].Cells[0].Paragraphs[0].Append("DLK").Bold();
+            table.Rows[0].Cells[1].Paragraphs[0].Append("Tổng lưu lượng thoại/ngày 2G (Erl)").Bold();
+            table.Rows[0].Cells[2].Paragraphs[0].Append("TU HR80%").Bold();
+            table.Rows[0].Cells[3].Paragraphs[0].Append("Tổng lưu lượng thoại/ngày 3G (Erl)").Bold();
+            table.Rows[0].Cells[4].Paragraphs[0].Append("Tổng lưu lượng data/ngày 3G (GB)").Bold();
+            table.Rows[0].Cells[5].Paragraphs[0].Append("Tốc độ 3G (Mbps)").Bold();
+            table.Rows[0].Cells[6].Paragraphs[0].Append("TU 3G Peak (%)").Bold();
+            table.Rows[0].Cells[7].Paragraphs[0].Append("Tổng lưu lượng thoại/ngày 4G (Erl)").Bold();
+            table.Rows[0].Cells[8].Paragraphs[0].Append("Tổng lưu lượng data/ngày 4G (GB)").Bold();
+            table.Rows[0].Cells[9].Paragraphs[0].Append("Tốc độ 4G (Mbps)").Bold();
+            table.Rows[0].Cells[10].Paragraphs[0].Append("Tổng lưu lượng data/ngày 5G (GB)").Bold() ;
+
+            table.Rows[1].Cells[1].Paragraphs[0].Append("2G").Bold();
+            table.Rows[1].Cells[3].Paragraphs[0].Append("3G").Bold();
+            table.Rows[1].Cells[7].Paragraphs[0].Append("4G").Bold();
+            table.Rows[1].Cells[10].Paragraphs[0].Append("5G").Bold();
+
+
+            table.Rows[1].MergeCells(1, 2);
+            table.Rows[1].MergeCells(2, 5);
+            table.Rows[1].MergeCells(3, 5);
+            table.MergeCellsInColumn(0, 0, 1);
+
+            table.InsertRow();
+
+            var p = doc.Paragraphs.Where(s => s.Text.Contains("{bangluuluongchatluong}")).FirstOrDefault();
+            if (p != null)
+            {
+                p.InsertTableAfterSelf(table);
+                p.ReplaceText("{bangluuluongchatluong}", "");
+            }
         }
 
         private void bangchitieuhatang(DocX doc, IXLWorksheet ws, IXLWorksheet wsMeta)
         {
-            string font = "Times New Roman";
+
             var table = doc.AddTable(2, 11);
             table.Design = TableDesign.TableGrid;
             table.MergeCellsInColumn(0, 0, 1);
@@ -121,8 +242,9 @@ namespace Viettel_Report_Automation.Controllers
             table.Rows[0].Cells[2].Paragraphs[0].Append(@"Kế hoạch T7").Font(font).Bold();
             table.Rows[0].Cells[3].Paragraphs[0].Append(@"Thực hiện T7").Font(font).Bold();
             table.Rows[0].Cells[4].Paragraphs[0].Append(@"%TH").Font(font).Bold();
-            table.Rows[0].Cells[5].Paragraphs[0].Append(@"Thực hiện năm 2025").Font(font).Bold();
-            table.Rows[0].Cells[6].Paragraphs[0].Append(@"Thực hiện năm 2024").Font(font).Bold();
+            DateTime current = DateTime.Now;
+            table.Rows[0].Cells[5].Paragraphs[0].Append($"Thực hiện năm {current.Year}").Font(font).Bold();
+            table.Rows[0].Cells[6].Paragraphs[0].Append($"Thực hiện năm {current.Year-1}").Font(font).Bold();
 
             table.Rows[1].Cells[5].Paragraphs[0].Append(@"Kế hoạch").Font(font).Bold();
             table.Rows[1].Cells[6].Paragraphs[0].Append(@"Thực hiện").Font(font).Bold();
@@ -176,10 +298,8 @@ namespace Viettel_Report_Automation.Controllers
             t.InsertTableAfterSelf(table);
         }
 
-        public void trienkhaiBTS(DocX doc)
+        private void trienkhaiBTS(DocX doc)
         {
-            // Bang trien khai xay dung tram BTS moi
-            string font = "Times New Roman";
             var tableBTS = doc.AddTable(5, 9);
             tableBTS.Design = TableDesign.TableGrid;
             tableBTS.MergeCellsInColumn(0, 0, 1);
@@ -287,13 +407,15 @@ namespace Viettel_Report_Automation.Controllers
                 doc.ReplaceText("{nhanxet01}", "Vị trí trạm hiện tại Viettel đang chiếm ưu thế với 1633 vị trí. Số lượng vị trí trạm Viettel nhiều hơn Vinaphone 240 vị trí và nhiều hơn Mobifone 510 vị trí. Xét về mức huyện Viettel còn 4 huyện có vị trí trạm ít hơn nhà mạng Vina là Krông Bông ít hơn 4 vị trí, Huyện Ea Súp và Krông Búk ít hơn 1 vị trí, huyện Ea Súp ít hơn 5 trạm");
                 doc.ReplaceText("{h_ketquathuchien6thang}", "KẾT QUẢ THỰC HIỆN 6 THÁNG ĐẦU NĂM 2025");
 
-                hatangdidong(doc);
+                /*hatangdidong(doc);
                 bangchitieuhatang(doc, ws, wsMeta);
                 soluongtramtheothuphu(doc);
                 trienkhaiBTS(doc);
-
-
+                bangtruyendan(doc);
+                vunglom(doc);*/
+                bangLuuluongChatluongmang(doc);
                 wb.Dispose();
+
                 doc.Save();
                 doc.Dispose();
             }

@@ -21,4 +21,8 @@
         <Setter Property="MinWidth" Value="100"/>
         <Setter Property="MinHeight" Value="30"/>
     </Style>
+
+    <Style TargetType="Label" x:Key="labelHeading">
+        <Setter Property="FontSize" Value="14pt"/>
+    </Style>
 </ResourceDictionary>

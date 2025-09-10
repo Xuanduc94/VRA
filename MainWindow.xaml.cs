@@ -66,8 +66,13 @@ namespace Viettel_Report_Automation
                     new SettingController().SettingScore(fileChamDiem, progress);
                     reportExtractController.generateReport(this.fileChamDiem, fileExcel, fileWord, progress);
                     new WordReportController().generateWordFile(progress, fileChamDiem);
+                    
                 });
-
+                MessageBoxResult messageBoxResult = MessageBox.Show("Tạo báo cáo thành công", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                if (messageBoxResult == MessageBoxResult.OK)
+                {
+                    Application.Current.Shutdown();
+                }
 
             }
         }

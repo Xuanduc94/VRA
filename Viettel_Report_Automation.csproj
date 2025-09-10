@@ -9,7 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Containner\" />
     <Folder Include="Images\Icon\" />
   </ItemGroup>
 
