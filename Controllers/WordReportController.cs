@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Excel;
 using System.Data;
+using System.Drawing;
 using System.IO;
 using System.Windows.Controls;
 using Xceed.Document.NET;
@@ -11,6 +12,7 @@ namespace Viettel_Report_Automation.Controllers
     {
         private void hatangdidong(DocX doc)
         {
+
             var tableMobileNetwork = doc.AddTable(1, 5);
             tableMobileNetwork.Design = TableDesign.TableGrid;
 
@@ -76,10 +78,29 @@ namespace Viettel_Report_Automation.Controllers
             tableMobileNetwork.Rows[9].Cells[2].Paragraphs[0].Append("26%");
             tableMobileNetwork.Rows[9].Cells[3].Paragraphs[0].Append("55%");
             tableMobileNetwork.Rows[9].Cells[4].Paragraphs[0].Append("100%");
+     
+            var p = doc.Paragraphs.Where(s => s.Text.Contains("{banghatangdidong}")).ToList();
+            foreach(var item in p)
+            {
+                item.InsertTableAfterSelf(tableMobileNetwork);
+                item.ReplaceText("{banghatangdidong}", "");
+            }
+           
+        }
 
-            var p = doc.Paragraphs.Where(s => s.Text.Contains("{banghatangdidong}")).FirstOrDefault();
-            p.InsertTableAfterSelf(tableMobileNetwork);
-            p.ReplaceText("{banghatangdidong}", "");
+        private void vunglom(DocX doc) {
+            var table = doc.AddTable(1, 6);
+
+            table.Rows[0].Cells[0].Paragraphs[0].Append("TT");
+            table.Rows[0].Cells[1].Paragraphs[0].Append("Tên tỉnh");
+            table.Rows[0].Cells[2].Paragraphs[0].Append("Tên huyện");
+            table.Rows[0].Cells[3].Paragraphs[0].Append("2G");
+            table.Rows[0].Cells[4].Paragraphs[0].Append("4G");
+            table.Rows[0].Cells[5].Paragraphs[0].Append("Tổng");
+
+            var p = doc.Paragraphs.Where(s => s.Text.Contains("{vunglom}")).FirstOrDefault();
+            p.InsertTableAfterSelf(table);
+            p.ReplaceText("{vunglom}", "");
         }
 
         private void bangchitieuhatang(DocX doc, IXLWorksheet ws, IXLWorksheet wsMeta)
@@ -191,6 +212,11 @@ namespace Viettel_Report_Automation.Controllers
             tableBTS.Rows[1].Cells[7].Paragraphs[0].Alignment = Alignment.center;
             tableBTS.Rows[1].Cells[8].Paragraphs[0].Alignment = Alignment.center;
 
+            tableBTS.Rows[0].Cells[4].FillColor = Color.CornflowerBlue;
+            tableBTS.Rows[1].Cells[6].FillColor = Color.CornflowerBlue;
+            tableBTS.Rows[1].Cells[7].FillColor = Color.CornflowerBlue;
+            tableBTS.Rows[1].Cells[8].FillColor = Color.CornflowerBlue;
+
             tableBTS.Rows[2].Cells[0].Paragraphs[0].Append("1");
             tableBTS.Rows[3].Cells[0].Paragraphs[0].Append("2");
 
@@ -264,12 +290,14 @@ namespace Viettel_Report_Automation.Controllers
                 hatangdidong(doc);
                 bangchitieuhatang(doc, ws, wsMeta);
                 soluongtramtheothuphu(doc);
+                trienkhaiBTS(doc);
+
 
                 wb.Dispose();
                 doc.Save();
                 doc.Dispose();
             }
-            progress.Report("Đã tạo file word");
+            progress.Report("Tạo file word hoàn tất");
         }
 
         private string getValueFromFormula(string formula, IXLWorksheet worksheet)

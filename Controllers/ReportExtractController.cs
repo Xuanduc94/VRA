@@ -238,7 +238,6 @@ namespace Viettel_Report_Automation.Controllers
                 }
                 var workbookTheoDoi = new XLWorkbook(fileTheodoi);
 
-                bool check = true;
                 List<int> months = new List<int>();
                 foreach (int i in monthOfQuater)
                 {

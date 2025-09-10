@@ -1,1 +1,1 @@
-- Tên các chỉ tiêu trong file excel của các tháng và quý phải giống nhau
+- Tên các chỉ tiêu trong file excel theo dõi và file chấm điểm phải giống nhau để hệ thống có thể nhận diện được mối quan hệ
