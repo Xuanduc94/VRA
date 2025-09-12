@@ -25,6 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Files\Baocao.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Files\ChamdiemKPI.xlsx">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
@@ -34,8 +37,8 @@
     <None Update="Files\Tonghopquy.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Files\word_mau.docx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="Files\word_mau_bk.docx">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

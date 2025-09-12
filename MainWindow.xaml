@@ -23,14 +23,13 @@
             <Label Style="{StaticResource labelNormal}" Width="100" x:Name="lbl_chamdiem" Content="File được chọn"/>
             <Button Style="{StaticResource NormalButton}" x:Name="btn_chamdiemkpi" Click="btn_chamdiemkpi_Click" Height="30" Width="100" Content="Chọn file" Margin="10,10,90,10" />
         </StackPanel>
-       <!--
+
         <StackPanel IsEnabled="False" x:Name="word_are" Orientation="Horizontal">
-            <Label Width="150" Content="File Word"/>
+            <Label Width="150" Content="File Word kế hoạch"/>
             <Label Style="{StaticResource labelNormal}" Width="100" x:Name="lbl_fileName" Content="File được chọn"/>
             <Button Style="{StaticResource NormalButton}" x:Name="btn_openFile" Click="btn_openFile_Click" Height="30" Width="100" Content="Chọn file" Margin="10,10,90,10" Grid.ColumnSpan="2"/>
         </StackPanel>
-        --> 
-        
+
         <StackPanel>
             <StackPanel.Resources>
                 <Style TargetType="Label">

@@ -1,9 +1,15 @@
 ﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.EntityFrameworkCore.Storage;
 using System.Data;
 using System.Drawing;
 using System.IO;
+using Viettel_Report_Automation.Utils;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
+using Text = DocumentFormat.OpenXml.Wordprocessing.Text;
 
 namespace Viettel_Report_Automation.Controllers
 {
@@ -98,7 +104,7 @@ namespace Viettel_Report_Automation.Controllers
                     tableMobileNetwork.Rows[row].Cells[cell].Paragraphs[0].Alignment = Alignment.center;
                     if (row % 2 != 0)
                     {
-                        tableMobileNetwork.Rows[row].Cells[cell].FillColor = Color.CornflowerBlue;
+                        tableMobileNetwork.Rows[row].Cells[cell].FillColor = System.Drawing.Color.CornflowerBlue;
                     }
                 }
             }
@@ -114,7 +120,7 @@ namespace Viettel_Report_Automation.Controllers
         private void bangtruyendan(DocX doc)
         {
             var table = doc.AddTable(2, 9);
-           
+
 
             table.Rows[0].MergeCells(1, 4);
             table.Rows[0].MergeCells(2, 5);
@@ -124,21 +130,22 @@ namespace Viettel_Report_Automation.Controllers
 
             for (int i = 0; i < 3; i++)
             {
-                table.Rows[0].Cells[i].FillColor = Color.Yellow;
+                table.Rows[0].Cells[i].FillColor = System.Drawing.Color.Yellow;
 
             }
             for (int i = 1; i < 9; i++)
             {
-                table.Rows[1].Cells[i].FillColor = Color.Yellow;
+                table.Rows[1].Cells[i].FillColor = System.Drawing.Color.Yellow;
                 table.Rows[1].Cells[i].Width = 200;
             }
             table.Rows[0].Cells[0].Paragraphs[0].Append("Tỉnh").Bold();
             table.Rows[0].Cells[1].Paragraphs[0].Append("Trạm").Bold();
             table.Rows[0].Cells[2].Paragraphs[0].Append("Cáp quang").Bold();
 
-            for (int cell = 0; cell < 3; cell++) {
+            for (int cell = 0; cell < 3; cell++)
+            {
                 table.Rows[0].Cells[cell].Paragraphs[0].Alignment = Alignment.center;
-                table.Rows[0].Cells[cell].Paragraphs[0].Bold(); 
+                table.Rows[0].Cells[cell].Paragraphs[0].Bold();
             }
 
             table.Rows[1].Cells[1].Paragraphs[0].Append("Tổng trạm Macro");
@@ -167,6 +174,88 @@ namespace Viettel_Report_Automation.Controllers
 
         }
 
+        private void chatluongmangvotuyen(DocX doc, string wordKehoach)
+        {
+            var table = doc.AddTable(2, 8);
+            table.AutoFit = AutoFit.Window;
+
+            table.Rows[0].MergeCells(1, 7);
+            table.MergeCellsInColumn(0, 0, 1);
+
+            table.Rows[0].Cells[0].Paragraphs[0].Append("2025-04").FontSize(11).Bold();
+            table.Rows[0].Cells[1].Paragraphs[0].Append("Đắk Lắk").FontSize(11).Bold();
+
+            table.Rows[0].Cells[0].Paragraphs[0].Alignment = Alignment.center;
+            table.Rows[0].Cells[1].Paragraphs[0].Alignment = Alignment.center;
+
+            table.Rows[0].Cells[0].FillColor = System.Drawing.Color.Yellow;
+            table.Rows[0].Cells[1].FillColor = System.Drawing.Color.Yellow;
+
+            table.Rows[1].Cells[1].Paragraphs[0].Append("CTKT").FontSize(11);
+            table.Rows[1].Cells[2].Paragraphs[0].Append("Giá trị đạt được").FontSize(11);
+            table.Rows[1].Cells[3].Paragraphs[0].Append("So với CTKT").FontSize(11);
+            table.Rows[1].Cells[4].Paragraphs[0].Append("So với tháng trước").FontSize(11);
+            table.Rows[1].Cells[5].Paragraphs[0].Append("So với cùng kỳ năm trước").FontSize(11);
+            table.Rows[1].Cells[6].Paragraphs[0].Append("Tháng trước").FontSize(11);
+            table.Rows[1].Cells[7].Paragraphs[0].Append("Cùng kỳ năm trước").FontSize(11);
+
+            for (int i = 1; i < 8; i++)
+            {
+                table.Rows[1].Cells[i].Paragraphs[0].Alignment = Alignment.center;
+                table.Rows[1].Cells[i].Paragraphs[0].Bold();
+                table.Rows[1].Cells[i].FillColor = System.Drawing.Color.Yellow;
+            }
+
+            List<string> dataTable = new List<string>();
+            string[] columnTable = new string[] { "mvt-A", "mvt-B", "mvt-C", "mvt-D", "mvt-E", "mvt-F", "mvt-G", "mvt-H" };
+
+            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(wordKehoach, false))
+            {
+                for (int i = 1; i < 17; i++)
+                {
+                    string rowData = "";
+                    foreach (string columns in columnTable)
+                    {
+                        var sdt = wordDoc.MainDocumentPart.Document.Descendants<SdtElement>()
+                      .FirstOrDefault(s =>
+                          s.SdtProperties.GetFirstChild<Tag>()?.Val == $"{columns}{i}");
+                        if (sdt != null)
+                        {
+                            rowData += sdt.InnerText + "|";
+                        }
+                    }
+
+                    dataTable.Add(rowData);
+                }
+
+                table.InsertRow();
+                int numRow = 2;
+                foreach (string data in dataTable)
+                {
+                    string[] dataSplit = data.Split('|');
+                    for (int i = 0; i < dataSplit.Length - 1; i++)
+                    {
+                        table.Rows[numRow].Cells[i].Paragraphs[0].Append(dataSplit[i]).FontSize(11);
+                    }
+                    
+                    if (numRow < dataTable.Count() - 1)
+                    {
+                        numRow++;
+                        table.InsertRow();
+
+                    }
+                }
+
+            }
+
+            var p = doc.Paragraphs.Where(s => s.Text.Contains("{bangchatluongmangvotuyen}")).FirstOrDefault();
+            if (p != null)
+            {
+                p.InsertTableAfterSelf(table);
+                p.ReplaceText("{bangchatluongmangvotuyen}", "");
+            }
+        }
+
         private void vunglom(DocX doc)
         {
             var table = doc.AddTable(1, 6);
@@ -188,39 +277,92 @@ namespace Viettel_Report_Automation.Controllers
 
         }
 
-        private void bangLuuluongChatluongmang(DocX doc)
+        private void bangLuuluongChatluongmang(DocX doc, string wordKehoach)
         {
-            var table = doc.AddTable(2, 11);
-            table.Rows[0].Cells[0].Paragraphs[0].Append("DLK").Bold();
-            table.Rows[0].Cells[1].Paragraphs[0].Append("Tổng lưu lượng thoại/ngày 2G (Erl)").Bold();
-            table.Rows[0].Cells[2].Paragraphs[0].Append("TU HR80%").Bold();
-            table.Rows[0].Cells[3].Paragraphs[0].Append("Tổng lưu lượng thoại/ngày 3G (Erl)").Bold();
-            table.Rows[0].Cells[4].Paragraphs[0].Append("Tổng lưu lượng data/ngày 3G (GB)").Bold();
-            table.Rows[0].Cells[5].Paragraphs[0].Append("Tốc độ 3G (Mbps)").Bold();
-            table.Rows[0].Cells[6].Paragraphs[0].Append("TU 3G Peak (%)").Bold();
-            table.Rows[0].Cells[7].Paragraphs[0].Append("Tổng lưu lượng thoại/ngày 4G (Erl)").Bold();
-            table.Rows[0].Cells[8].Paragraphs[0].Append("Tổng lưu lượng data/ngày 4G (GB)").Bold();
-            table.Rows[0].Cells[9].Paragraphs[0].Append("Tốc độ 4G (Mbps)").Bold();
-            table.Rows[0].Cells[10].Paragraphs[0].Append("Tổng lưu lượng data/ngày 5G (GB)").Bold() ;
 
-            table.Rows[1].Cells[1].Paragraphs[0].Append("2G").Bold();
-            table.Rows[1].Cells[3].Paragraphs[0].Append("3G").Bold();
-            table.Rows[1].Cells[7].Paragraphs[0].Append("4G").Bold();
-            table.Rows[1].Cells[10].Paragraphs[0].Append("5G").Bold();
+            List<string> dataTable = new List<string>();
+            string[] rowTable = new string[] { "N", "A", "B", "C", "D", "E", "H", "G", "I", "J", "K", "L" };
+            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(wordKehoach, false))
+            {
 
+                for (int i = 1; i < 6; i++)
+                {
+                    string rowData = "";
+                    foreach (string row in rowTable)
+                    {
+                        var sdt = wordDoc.MainDocumentPart.Document.Descendants<SdtElement>()
+                      .FirstOrDefault(s =>
+                          s.SdtProperties.GetFirstChild<Tag>()?.Val == $"{row}{i}");
+                        if (sdt != null)
+                        {
+                            rowData += sdt.InnerText + "|";
+                        }
+                    }
+
+                    dataTable.Add(rowData);
+                }
+
+            }
+
+            var table = doc.AddTable(2, 12);
+
+            table.AutoFit = AutoFit.Window;
+            table.Rows[0].Cells[0].Paragraphs[0].Append("DLK").Bold().FontSize(8);
+            table.Rows[0].Cells[1].Paragraphs[0].Append("Tổng lưu lượng thoại/ngày 2G (Erl)").Bold().FontSize(8);
+            table.Rows[0].Cells[2].Paragraphs[0].Append("TU HR80%").Bold().FontSize(8);
+            table.Rows[0].Cells[3].Paragraphs[0].Append("Tổng lưu lượng thoại/ngày 3G (Erl)").Bold().FontSize(8);
+            table.Rows[0].Cells[4].Paragraphs[0].Append("Tổng lưu lượng data/ngày 3G (GB)").Bold().FontSize(8);
+            table.Rows[0].Cells[5].Paragraphs[0].Append("Tốc độ 3G (Mbps)").Bold().FontSize(8);
+            table.Rows[0].Cells[6].Paragraphs[0].Append("TU 3G Peak (%)").Bold().FontSize(8);
+            table.Rows[0].Cells[7].Paragraphs[0].Append("Tổng lưu lượng thoại/ngày 4G (Erl)").Bold().FontSize(8);
+            table.Rows[0].Cells[8].Paragraphs[0].Append("Tổng lưu lượng data/ngày 4G (GB)").Bold().FontSize(8);
+            table.Rows[0].Cells[9].Paragraphs[0].Append("Tốc độ 4G (Mbps)").Bold().FontSize(8);
+            table.Rows[0].Cells[10].Paragraphs[0].Append("TU 4G").Bold().FontSize(8);
+            table.Rows[0].Cells[11].Paragraphs[0].Append("Tổng lưu lượng data/ngày 5G (GB)").Bold().FontSize(8);
+
+            for (int i = 0; i < 12; i++)
+            {
+                table.Rows[0].Cells[i].FillColor = System.Drawing.Color.Yellow;
+            }
+
+            table.Rows[1].Cells[1].Paragraphs[0].Append("2G").Bold().FontSize(8);
+            table.Rows[1].Cells[3].Paragraphs[0].Append("3G").Bold().FontSize(8);
+            table.Rows[1].Cells[7].Paragraphs[0].Append("4G").Bold().FontSize(8);
+            table.Rows[1].Cells[11].Paragraphs[0].Append("5G").Bold().FontSize(8);
+
+            table.Rows[1].Cells[1].FillColor = System.Drawing.Color.Yellow;
+            table.Rows[1].Cells[3].FillColor = System.Drawing.Color.Yellow;
+            table.Rows[1].Cells[7].FillColor = System.Drawing.Color.Yellow;
+            table.Rows[1].Cells[11].FillColor = System.Drawing.Color.Yellow;
 
             table.Rows[1].MergeCells(1, 2);
             table.Rows[1].MergeCells(2, 5);
-            table.Rows[1].MergeCells(3, 5);
+            table.Rows[1].MergeCells(3, 6);
             table.MergeCellsInColumn(0, 0, 1);
 
             table.InsertRow();
+            int numRow = 2;
 
-            var p = doc.Paragraphs.Where(s => s.Text.Contains("{bangluuluongchatluong}")).FirstOrDefault();
+            foreach (string data in dataTable)
+            {
+                string[] dataSplit = data.Split('|');
+                for (int i = 0; i < dataSplit.Length; i++)
+                {
+                    if (i < 12)
+                    {
+                        table.Rows[numRow].Cells[i].Paragraphs[0].Append(dataSplit[i]).FontSize(8);
+                    }
+                }
+                numRow++;
+                table.InsertRow();
+            }
+
+
+            var p = doc.Paragraphs.Where(s => s.Text.Contains("{bangluuluongmangluoi}")).FirstOrDefault();
             if (p != null)
             {
                 p.InsertTableAfterSelf(table);
-                p.ReplaceText("{bangluuluongchatluong}", "");
+                p.ReplaceText("{bangluuluongmangluoi}", "");
             }
         }
 
@@ -244,7 +386,7 @@ namespace Viettel_Report_Automation.Controllers
             table.Rows[0].Cells[4].Paragraphs[0].Append(@"%TH").Font(font).Bold();
             DateTime current = DateTime.Now;
             table.Rows[0].Cells[5].Paragraphs[0].Append($"Thực hiện năm {current.Year}").Font(font).Bold();
-            table.Rows[0].Cells[6].Paragraphs[0].Append($"Thực hiện năm {current.Year-1}").Font(font).Bold();
+            table.Rows[0].Cells[6].Paragraphs[0].Append($"Thực hiện năm {current.Year - 1}").Font(font).Bold();
 
             table.Rows[1].Cells[5].Paragraphs[0].Append(@"Kế hoạch").Font(font).Bold();
             table.Rows[1].Cells[6].Paragraphs[0].Append(@"Thực hiện").Font(font).Bold();
@@ -332,10 +474,10 @@ namespace Viettel_Report_Automation.Controllers
             tableBTS.Rows[1].Cells[7].Paragraphs[0].Alignment = Alignment.center;
             tableBTS.Rows[1].Cells[8].Paragraphs[0].Alignment = Alignment.center;
 
-            tableBTS.Rows[0].Cells[4].FillColor = Color.CornflowerBlue;
-            tableBTS.Rows[1].Cells[6].FillColor = Color.CornflowerBlue;
-            tableBTS.Rows[1].Cells[7].FillColor = Color.CornflowerBlue;
-            tableBTS.Rows[1].Cells[8].FillColor = Color.CornflowerBlue;
+            tableBTS.Rows[0].Cells[4].FillColor = System.Drawing.Color.CornflowerBlue;
+            tableBTS.Rows[1].Cells[6].FillColor = System.Drawing.Color.CornflowerBlue;
+            tableBTS.Rows[1].Cells[7].FillColor = System.Drawing.Color.CornflowerBlue;
+            tableBTS.Rows[1].Cells[8].FillColor = System.Drawing.Color.CornflowerBlue;
 
             tableBTS.Rows[2].Cells[0].Paragraphs[0].Append("1");
             tableBTS.Rows[3].Cells[0].Paragraphs[0].Append("2");
@@ -386,7 +528,7 @@ namespace Viettel_Report_Automation.Controllers
             m.InsertTableAfterSelf(tableDG);
             m.ReplaceText("{soluongtramtheothuphu}", "");
         }
-        public void generateWordFile(IProgress<string> progress, string fileTheoDoi = "", string sheetTheoDoi = "")
+        public void generateWordFile(IProgress<string> progress, string fileTheoDoi = "", string sheetTheoDoi = "", string wordkehoach = "")
         {
             progress.Report("Đang tạo báo cáo word");
 
@@ -396,16 +538,16 @@ namespace Viettel_Report_Automation.Controllers
             var wsMeta = wb.Worksheet("Meta");
             List<string> mainCreatia = new List<string>();
 
-            string wordPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Files", "word_mau.docx");
+            string wordPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Files", "Baocao.docx");
 
             using (var doc = DocX.Load(wordPath))
             {
 
-                doc.ReplaceText("{thang}", "08");
-                doc.ReplaceText("{nam}", "2025");
+                //doc.ReplaceText("{thang}", "08");
+                doc.ReplaceText("{nam}", DateTime.Now.Year.ToString());
 
-                doc.ReplaceText("{nhanxet01}", "Vị trí trạm hiện tại Viettel đang chiếm ưu thế với 1633 vị trí. Số lượng vị trí trạm Viettel nhiều hơn Vinaphone 240 vị trí và nhiều hơn Mobifone 510 vị trí. Xét về mức huyện Viettel còn 4 huyện có vị trí trạm ít hơn nhà mạng Vina là Krông Bông ít hơn 4 vị trí, Huyện Ea Súp và Krông Búk ít hơn 1 vị trí, huyện Ea Súp ít hơn 5 trạm");
-                doc.ReplaceText("{h_ketquathuchien6thang}", "KẾT QUẢ THỰC HIỆN 6 THÁNG ĐẦU NĂM 2025");
+                /*doc.ReplaceText("{nhanxet01}", "Vị trí trạm hiện tại Viettel đang chiếm ưu thế với 1633 vị trí. Số lượng vị trí trạm Viettel nhiều hơn Vinaphone 240 vị trí và nhiều hơn Mobifone 510 vị trí. Xét về mức huyện Viettel còn 4 huyện có vị trí trạm ít hơn nhà mạng Vina là Krông Bông ít hơn 4 vị trí, Huyện Ea Súp và Krông Búk ít hơn 1 vị trí, huyện Ea Súp ít hơn 5 trạm");
+                doc.ReplaceText("{h_ketquathuchien6thang}", "KẾT QUẢ THỰC HIỆN 6 THÁNG ĐẦU NĂM 2025");*/
 
                 /*hatangdidong(doc);
                 bangchitieuhatang(doc, ws, wsMeta);
@@ -413,7 +555,8 @@ namespace Viettel_Report_Automation.Controllers
                 trienkhaiBTS(doc);
                 bangtruyendan(doc);
                 vunglom(doc);*/
-                bangLuuluongChatluongmang(doc);
+                //  bangLuuluongChatluongmang(doc, wordkehoach);
+                chatluongmangvotuyen(doc, wordkehoach);
                 wb.Dispose();
 
                 doc.Save();

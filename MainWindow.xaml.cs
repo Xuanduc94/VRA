@@ -27,11 +27,11 @@ namespace Viettel_Report_Automation
                 if (openFileDialog.FileName.Length > 20)
                 {
                     string[] fileName = openFileDialog.FileName.Split("\\");
-                    //  lbl_fileName.Content = lbl + "...../" + fileName[fileName.Length - 1];
+                      lbl_fileName.Content = lbl + "...../" + fileName[fileName.Length - 1];
                 }
                 else
                 {
-                    //lbl_fileName.Content = lbl + openFileDialog.FileName;
+                    lbl_fileName.Content = lbl + openFileDialog.FileName;
                 }
                 this.fileWord = openFileDialog.FileName.ToString();
 
@@ -46,13 +46,13 @@ namespace Viettel_Report_Automation
 
             if (this.fileExcel == null)
             {
-                MessageBox.Show("Vui lòng chọn file excel", "Cảnh báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Vui lòng chọn file excel theo dõi KPI tháng", "Cảnh báo", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
-            //else if (this.fileWord == null)
-            //{
-            //    MessageBox.Show("Vui lòng chọn file word", "Cảnh báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+            else if (this.fileWord == null)
+            {
+                MessageBox.Show("Vui lòng chọn file word kế hoạch", "Cảnh báo", MessageBoxButton.OK, MessageBoxImage.Warning);
 
-            //}
+            }
             else
             {
                 Progress<string> progress = new Progress<string>(value =>
@@ -62,10 +62,10 @@ namespace Viettel_Report_Automation
                 });
                 await Task.Run(() =>
                 {
-                    ReportExtractController reportExtractController = new ReportExtractController();
+                    ReportExtractController reportExtractController = new ReportExtractController(progress);
                     new SettingController().SettingScore(fileChamDiem, progress);
-                    reportExtractController.generateReport(this.fileChamDiem, fileExcel, fileWord, progress);
-                    new WordReportController().generateWordFile(progress, fileChamDiem);
+                    reportExtractController.generateReport(this.fileChamDiem, fileExcel, fileWord);
+                   // new WordReportController().generateWordFile(progress, fileChamDiem, "", fileWord);
                     
                 });
                 MessageBoxResult messageBoxResult = MessageBox.Show("Tạo báo cáo thành công", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -95,7 +95,7 @@ namespace Viettel_Report_Automation
                 }
                 fileExcel = openFileDialog.FileName.ToString();
                 kpi_area.IsEnabled = true;
-                // word_are.IsEnabled = true;
+                word_are.IsEnabled = true;
             }
         }
 
