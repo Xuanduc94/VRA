@@ -31,7 +31,7 @@ namespace Viettel_Report_Automation.Controllers
 
         private void TonghopTheoDoi(string fileChamdiem, string fileTheodoi, string fileWord)
         {
-           progress.Report("Trích xuất file theo dõi KPI");
+            progress.Report("Trích xuất file theo dõi KPI");
             var workbookChamDiem = new XLWorkbook(fileChamdiem);
             var sheetChamDiem = workbookChamDiem.Worksheet("BC_chi_tiet");
             string monthStr = StringHelper.RemoveDiacriticsAndSpaces(sheetChamDiem.Cell("G1").Value.ToString(), false).Replace("/", ".").ToUpper();
@@ -45,13 +45,13 @@ namespace Viettel_Report_Automation.Controllers
             progress.Report("Tổng hợp báo cáo quý");
             QuarterlyReport(progress, fileTheodoi, month);
             workbookChamDiem.Dispose();
-           /* progress.Report("Tính toán báo cáo năm");
-            YearReport();
-            progress.Report("Tổng hợp báo cáo");
-            int quater = NumberHelper.GetQuarter(month);
-            MappingDataYearAndQuaterToKPI(quater, fileChamdiem);
-            MappingDataTotal(fileChamdiem);
-            progress.Report("Đã tính toán xong");*/
+            /* progress.Report("Tính toán báo cáo năm");
+             YearReport();
+             progress.Report("Tổng hợp báo cáo");
+             int quater = NumberHelper.GetQuarter(month);
+             MappingDataYearAndQuaterToKPI(quater, fileChamdiem);
+             MappingDataTotal(fileChamdiem);
+             progress.Report("Đã tính toán xong");*/
         }
 
         private void MappingDataTotal(string fileChamDiem)
@@ -138,7 +138,8 @@ namespace Viettel_Report_Automation.Controllers
                 this.progress.Report($"Đang cấu hình dữ liệu tháng {i} năm {DateTime.Now.Year}");
                 string nameSheet = $"THANG {i}.{DateTime.Now.Year}";
                 var checkSheet = workbook.Worksheets.Where(s => s.Name == nameSheet).FirstOrDefault();
-                if (checkSheet != null) {
+                if (checkSheet != null)
+                {
                     var worksheet = workbook.Worksheet(nameSheet);
                     string m = nameSheet.Replace("THANG ", "");
                     if (workbook.Worksheets.FirstOrDefault(s => s.Name == "Meta" + m) != null)
@@ -164,8 +165,8 @@ namespace Viettel_Report_Automation.Controllers
                     }
                 }
             }
-            
-            
+
+
             workbook.Save();
             workbook.Dispose();
         }
@@ -265,26 +266,26 @@ namespace Viettel_Report_Automation.Controllers
 
                 // Tong hop bao cao
                 // Lay bao cao theo thang 
-                int step = 1;
+
                 foreach (int i in months)
                 {
-                    
+
                     var ws = workbookTheoDoi.Worksheets.FirstOrDefault(s => s.Name == "Meta" + i + "." + DateTime.Now.Year);
 
                     // Ghi du lieu cac thang
                     if (ws != null)
                     {
                         int rowTh = 3;
-                        
+
                         for (int row = 1; row < ws.RowsUsed().Count(); row++)
                         {
                             string keyword = ws.Cell("A" + row).Value.ToString().ToLower();
-                          
+
                             var cell = worksheetTong.Cells().FirstOrDefault(c => c.GetString() == keyword);
-                            if (step == 2)
+                            /*if (step == 2)
                             {
                                 Debugger.Break();
-                            }
+                            }*/
                             // Ghi đầu mục chỉ tiêu
                             if (cell == null)
                             {
@@ -295,35 +296,40 @@ namespace Viettel_Report_Automation.Controllers
                             }
                         }
 
-                        // Ghi dữ liệu vào bảng
-/*
-                        for (int row = 1; row < ws.RowsUsed().Count(); row++)
+                    }
+
+                }
+                /*Ghi dữ liệu vào bảng*/
+                int step = 1;
+                foreach (int i in months)
+                {
+                    var ws = workbookTheoDoi.Worksheets.FirstOrDefault(s => s.Name == "Meta" + i + "." + DateTime.Now.Year);
+                    for (int row = 1; row < ws.RowsUsed().Count(); row++)
+                    {
+
+                        string keyword = ws.Cell("A" + row).Value.ToString().ToLower();
+                        var cell = worksheetTong.Cells().FirstOrDefault(c => c.GetString() == keyword);
+                        if (cell != null)
                         {
-                          
-                            string keyword = ws.Cell("A" + row).Value.ToString().ToLower();
-                            var cell = worksheetTong.Cells().FirstOrDefault(c => c.GetString() == keyword);
-                            if (cell != null)
+                            var rowNumber = cell.Address.RowNumber;
+
+                            switch (step)
                             {
-                                var rowNumber = cell.Address.RowNumber;
-                               
-                                switch (step)
-                                {
-                                   
-                                    case 1:
-                                        worksheetTong.Cell("B" + rowNumber).Value = NumberHelper.ParseStringToDouble(ws.Cell("B" + row).Value.ToString());
-                                        worksheetTong.Cell("C" + rowNumber).Value = NumberHelper.ParseStringToDouble(ws.Cell("C" + row).Value.ToString());
-                                        break;
-                                    case 2:
-                                        worksheetTong.Cell("D" + rowNumber).Value = NumberHelper.ParseStringToDouble(ws.Cell("B" + row).Value.ToString());
-                                        worksheetTong.Cell("E" + rowNumber).Value = NumberHelper.ParseStringToDouble(ws.Cell("C" + row).Value.ToString());
-                                        break;
-                                    case 3:
-                                        worksheetTong.Cell("F" + rowNumber).Value = NumberHelper.ParseStringToDouble(ws.Cell("B" + row).Value.ToString());
-                                        worksheetTong.Cell("G" + rowNumber).Value = NumberHelper.ParseStringToDouble(ws.Cell("C" + row).Value.ToString());
-                                        break;
-                                }
+
+                                case 1:
+                                    worksheetTong.Cell("B" + rowNumber).Value = NumberHelper.ParseStringToDouble(ws.Cell("B" + row).Value.ToString());
+                                    worksheetTong.Cell("C" + rowNumber).Value = NumberHelper.ParseStringToDouble(ws.Cell("C" + row).Value.ToString());
+                                    break;
+                                case 2:
+                                    worksheetTong.Cell("D" + rowNumber).Value = NumberHelper.ParseStringToDouble(ws.Cell("B" + row).Value.ToString());
+                                    worksheetTong.Cell("E" + rowNumber).Value = NumberHelper.ParseStringToDouble(ws.Cell("C" + row).Value.ToString());
+                                    break;
+                                case 3:
+                                    worksheetTong.Cell("F" + rowNumber).Value = NumberHelper.ParseStringToDouble(ws.Cell("B" + row).Value.ToString());
+                                    worksheetTong.Cell("G" + rowNumber).Value = NumberHelper.ParseStringToDouble(ws.Cell("C" + row).Value.ToString());
+                                    break;
                             }
-                        }*/
+                        }
                     }
                     step++;
                 }
