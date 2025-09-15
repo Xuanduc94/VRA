@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using Viettel_Report_Automation.Utils;
@@ -7,14 +8,19 @@ namespace Viettel_Report_Automation.Controllers
 {
     public class ReportExtractController
     {
+        private IProgress<string> progress;
 
+        public ReportExtractController(IProgress<string> progress)
+        {
+            this.progress = progress;
+        }
 
-        public void generateReport(string fileChamdiem, string fileTheodoi, string fileWord, IProgress<string> progress)
+        public void generateReport(string fileChamdiem, string fileTheodoi, string fileWord)
         {
 
             try
             {
-                TonghopTheoDoi(fileChamdiem, fileTheodoi, fileWord, progress);
+                TonghopTheoDoi(fileChamdiem, fileTheodoi, fileWord);
             }
             catch (Exception ex)
             {
@@ -23,9 +29,9 @@ namespace Viettel_Report_Automation.Controllers
 
         }
 
-        private void TonghopTheoDoi(string fileChamdiem, string fileTheodoi, string fileWord, IProgress<string> progress)
+        private void TonghopTheoDoi(string fileChamdiem, string fileTheodoi, string fileWord)
         {
-           progress.Report("Trích xuất file theo dõi KPI");
+            progress.Report("Trích xuất file theo dõi KPI");
             var workbookChamDiem = new XLWorkbook(fileChamdiem);
             var sheetChamDiem = workbookChamDiem.Worksheet("BC_chi_tiet");
             string monthStr = StringHelper.RemoveDiacriticsAndSpaces(sheetChamDiem.Cell("G1").Value.ToString(), false).Replace("/", ".").ToUpper();
@@ -39,14 +45,16 @@ namespace Viettel_Report_Automation.Controllers
             progress.Report("Tổng hợp báo cáo quý");
             QuarterlyReport(progress, fileTheodoi, month);
             workbookChamDiem.Dispose();
-            progress.Report("Tính toán báo cáo năm");
-            YearReport();
-            progress.Report("Tổng hợp báo cáo");
-            int quater = NumberHelper.GetQuarter(month);
-            MappingDataYearAndQuaterToKPI(quater, fileChamdiem);
-            MappingDataTotal(fileChamdiem);
-            progress.Report("Đã tính toán xong");
+            /* progress.Report("Tính toán báo cáo năm");
+             YearReport();
+             progress.Report("Tổng hợp báo cáo");
+             int quater = NumberHelper.GetQuarter(month);
+             MappingDataYearAndQuaterToKPI(quater, fileChamdiem);
+             MappingDataTotal(fileChamdiem);
+             progress.Report("Đã tính toán xong");*/
         }
+
+        
 
         private void MappingDataTotal(string fileChamDiem)
         {
@@ -126,31 +134,41 @@ namespace Viettel_Report_Automation.Controllers
 
         private void CreateMeTracking(string fileTheodoi, string month)
         {
-
             var workbook = new XLWorkbook(fileTheodoi);
-            var worksheet = workbook.Worksheet(month.Trim());
-            string m = month.Replace("THANG ", "");
-            if (workbook.Worksheets.FirstOrDefault(s => s.Name == "Meta" + m) != null)
+            for (int i = 1; i < 13; i++)
             {
-                workbook.Worksheets.Delete("Meta" + m);
-            }
-
-            workbook.AddWorksheet("Meta" + m);
-            Application.Current.Properties["metaTheodoi"] = "Meta" + m;
-            var sheetMeta = workbook.Worksheet("Meta" + m);
-            int rowMeta = 1;
-            for (int row = 5; row < worksheet.RowsUsed().Count(); row++)
-            {
-                var data = worksheet.Cell("B" + row).Value.ToString();
-                if (data != "")
+                this.progress.Report($"Đang cấu hình dữ liệu tháng {i} năm {DateTime.Now.Year}");
+                string nameSheet = $"THANG {i}.{DateTime.Now.Year}";
+                var checkSheet = workbook.Worksheets.Where(s => s.Name == nameSheet).FirstOrDefault();
+                if (checkSheet != null)
                 {
-                    // Bỏ hết dấu và dấu cách để làm Id
-                    sheetMeta.Cell("A" + rowMeta).Value = StringHelper.RemoveDiacriticsAndSpaces(data);
-                    sheetMeta.Cell("B" + rowMeta).Value = NumberHelper.ParseStringToDouble(worksheet.Cell("G" + row).Value.ToString());
-                    sheetMeta.Cell("C" + rowMeta).Value = NumberHelper.ParseStringToDouble(worksheet.Cell("H" + row).Value.ToString());
-                    rowMeta++;
+                    var worksheet = workbook.Worksheet(nameSheet);
+                    string m = nameSheet.Replace("THANG ", "");
+                    if (workbook.Worksheets.FirstOrDefault(s => s.Name == "Meta" + m) != null)
+                    {
+                        workbook.Worksheets.Delete("Meta" + m);
+                    }
+
+                    workbook.AddWorksheet("Meta" + m);
+                    Application.Current.Properties["metaTheodoi"] = "Meta" + m;
+                    var sheetMeta = workbook.Worksheet("Meta" + m);
+                    int rowMeta = 1;
+                    for (int row = 5; row < worksheet.RowsUsed().Count(); row++)
+                    {
+                        var data = worksheet.Cell("B" + row).Value.ToString();
+                        if (data != "")
+                        {
+                            // Bỏ hết dấu và dấu cách để làm Id
+                            sheetMeta.Cell("A" + rowMeta).Value = StringHelper.RemoveDiacriticsAndSpaces(data).ToLower();
+                            sheetMeta.Cell("B" + rowMeta).Value = NumberHelper.ParseStringToDouble(worksheet.Cell("G" + row).Value.ToString());
+                            sheetMeta.Cell("C" + rowMeta).Value = NumberHelper.ParseStringToDouble(worksheet.Cell("H" + row).Value.ToString());
+                            rowMeta++;
+                        }
+                    }
                 }
             }
+
+
             workbook.Save();
             workbook.Dispose();
         }
@@ -238,7 +256,6 @@ namespace Viettel_Report_Automation.Controllers
                 }
                 var workbookTheoDoi = new XLWorkbook(fileTheodoi);
 
-                bool check = true;
                 List<int> months = new List<int>();
                 foreach (int i in monthOfQuater)
                 {
@@ -251,20 +268,26 @@ namespace Viettel_Report_Automation.Controllers
 
                 // Tong hop bao cao
                 // Lay bao cao theo thang 
+
                 foreach (int i in months)
                 {
-                    int step = 1;
+
                     var ws = workbookTheoDoi.Worksheets.FirstOrDefault(s => s.Name == "Meta" + i + "." + DateTime.Now.Year);
 
                     // Ghi du lieu cac thang
                     if (ws != null)
                     {
                         int rowTh = 3;
+
                         for (int row = 1; row < ws.RowsUsed().Count(); row++)
                         {
-                            string keyword = ws.Cell("A" + row).Value.ToString();
-                            //var search = worksheetTong.Search(keyword);
+                            string keyword = ws.Cell("A" + row).Value.ToString().ToLower();
+
                             var cell = worksheetTong.Cells().FirstOrDefault(c => c.GetString() == keyword);
+                            /*if (step == 2)
+                            {
+                                Debugger.Break();
+                            }*/
                             // Ghi đầu mục chỉ tiêu
                             if (cell == null)
                             {
@@ -275,13 +298,26 @@ namespace Viettel_Report_Automation.Controllers
                             }
                         }
 
-                        for (int row = 1; row < ws.RowsUsed().Count(); row++)
+                    }
+
+                }
+                /*Ghi dữ liệu vào bảng*/
+                int step = 1;
+                foreach (int i in months)
+                {
+                    var ws = workbookTheoDoi.Worksheets.FirstOrDefault(s => s.Name == "Meta" + i + "." + DateTime.Now.Year);
+                    for (int row = 1; row < ws.RowsUsed().Count(); row++)
+                    {
+
+                        string keyword = ws.Cell("A" + row).Value.ToString().ToLower();
+                        var cell = worksheetTong.Cells().FirstOrDefault(c => c.GetString() == keyword);
+                        if (cell != null)
                         {
-                            string keyword = ws.Cell("A" + row).Value.ToString();
-                            var cell = worksheetTong.Cells().FirstOrDefault(c => c.GetString() == keyword);
                             var rowNumber = cell.Address.RowNumber;
+
                             switch (step)
                             {
+
                                 case 1:
                                     worksheetTong.Cell("B" + rowNumber).Value = NumberHelper.ParseStringToDouble(ws.Cell("B" + row).Value.ToString());
                                     worksheetTong.Cell("C" + rowNumber).Value = NumberHelper.ParseStringToDouble(ws.Cell("C" + row).Value.ToString());
@@ -295,7 +331,6 @@ namespace Viettel_Report_Automation.Controllers
                                     worksheetTong.Cell("G" + rowNumber).Value = NumberHelper.ParseStringToDouble(ws.Cell("C" + row).Value.ToString());
                                     break;
                             }
-
                         }
                     }
                     step++;
