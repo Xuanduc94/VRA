@@ -62,10 +62,10 @@ namespace Viettel_Report_Automation
                 });
                 await Task.Run(() =>
                 {
-                    ReportExtractController reportExtractController = new ReportExtractController(progress);
+                   /* ReportExtractController reportExtractController = new ReportExtractController(progress);
                     new SettingController().SettingScore(fileChamDiem, progress);
-                    reportExtractController.generateReport(this.fileChamDiem, fileExcel, fileWord);
-                   // new WordReportController().generateWordFile(progress, fileChamDiem, "", fileWord);
+                    reportExtractController.generateReport(this.fileChamDiem, fileExcel, fileWord);*/
+                    new WordReportController().generateWordFile(progress, fileChamDiem, "", fileWord);
                     
                 });
                 MessageBoxResult messageBoxResult = MessageBox.Show("Tạo báo cáo thành công", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);

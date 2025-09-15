@@ -1,15 +1,13 @@
 ﻿using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
-using Microsoft.EntityFrameworkCore.Storage;
 using System.Data;
 using System.Drawing;
 using System.IO;
-using Viettel_Report_Automation.Utils;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
-using Text = DocumentFormat.OpenXml.Wordprocessing.Text;
+using Alignment = Xceed.Document.NET.Alignment;
 
 namespace Viettel_Report_Automation.Controllers
 {
@@ -237,7 +235,7 @@ namespace Viettel_Report_Automation.Controllers
                     {
                         table.Rows[numRow].Cells[i].Paragraphs[0].Append(dataSplit[i]).FontSize(11);
                     }
-                    
+
                     if (numRow < dataTable.Count() - 1)
                     {
                         numRow++;
@@ -253,6 +251,85 @@ namespace Viettel_Report_Automation.Controllers
             {
                 p.InsertTableAfterSelf(table);
                 p.ReplaceText("{bangchatluongmangvotuyen}", "");
+            }
+        }
+
+        private void hatangtruyendan(DocX doc, string wordKehoach)
+        {
+            var table = doc.AddTable(2, 9);
+
+            table.Rows[0].MergeCells(5, 8);
+            table.Rows[0].MergeCells(1, 4);
+            table.MergeCellsInColumn(0, 0, 1);
+
+            table.AutoFit = AutoFit.Window;
+
+            table.Rows[0].Cells[0].Paragraphs[0].Append("Tỉnh").Bold();
+            table.Rows[0].Cells[1].Paragraphs[0].Append("Trạm").Bold();
+            table.Rows[0].Cells[2].Paragraphs[0].Append("Cáp quang").Bold();
+
+            table.Rows[1].Cells[1].Paragraphs[0].Append("Tổng trạm Macro").Bold();
+            table.Rows[1].Cells[2].Paragraphs[0].Append("Truyền dẫn Quang").Bold();
+            table.Rows[1].Cells[3].Paragraphs[0].Append("Truyền dẫn Viba/Vsat").Bold();
+            table.Rows[1].Cells[4].Paragraphs[0].Append("Tỷ lệ trạm sử dụng viba,vsat").Bold();
+            table.Rows[1].Cells[5].Paragraphs[0].Append("Cáp treo (km)").Bold();
+            table.Rows[1].Cells[6].Paragraphs[0].Append("Cáp ngầm (km)").Bold();
+            table.Rows[1].Cells[7].Paragraphs[0].Append("Cáp OPGW (km)").Bold();
+            table.Rows[1].Cells[8].Paragraphs[0].Append("Tổng khối lượng cáp quang(km)").Bold();
+
+            table.Rows[0].Cells[0].Paragraphs[0].Alignment = Alignment.center;
+            table.Rows[0].Cells[1].Paragraphs[0].Alignment = Alignment.center;
+            table.Rows[0].Cells[2].Paragraphs[0].Alignment = Alignment.center;
+
+            table.Rows[0].Cells[0].FillColor = System.Drawing.Color.Yellow; 
+            table.Rows[0].Cells[1].FillColor = System.Drawing.Color.Yellow; 
+            table.Rows[0].Cells[2].FillColor = System.Drawing.Color.Yellow;
+
+            table.Rows[1].Cells[0].FillColor = System.Drawing.Color.Yellow;
+            table.Rows[1].Cells[1].FillColor = System.Drawing.Color.Yellow;
+            table.Rows[1].Cells[2].FillColor = System.Drawing.Color.Yellow;
+            table.Rows[1].Cells[3].FillColor = System.Drawing.Color.Yellow;
+            table.Rows[1].Cells[4].FillColor = System.Drawing.Color.Yellow;
+            table.Rows[1].Cells[5].FillColor = System.Drawing.Color.Yellow;
+            table.Rows[1].Cells[6].FillColor = System.Drawing.Color.Yellow;
+            table.Rows[1].Cells[7].FillColor = System.Drawing.Color.Yellow;
+            table.Rows[1].Cells[8].FillColor = System.Drawing.Color.Yellow;
+
+            table.Rows[0].Cells[1].Paragraphs[0].Alignment = Alignment.center;
+            table.Rows[0].Cells[2].Paragraphs[0].Alignment = Alignment.center;
+
+            table.Rows[1].Cells[1].Paragraphs[0].Alignment = Alignment.center;
+            table.Rows[1].Cells[2].Paragraphs[0].Alignment = Alignment.center;
+            table.Rows[1].Cells[3].Paragraphs[0].Alignment = Alignment.center;
+            table.Rows[1].Cells[4].Paragraphs[0].Alignment = Alignment.center;
+            table.Rows[1].Cells[5].Paragraphs[0].Alignment = Alignment.center;
+            table.Rows[1].Cells[6].Paragraphs[0].Alignment = Alignment.center;
+            table.Rows[1].Cells[7].Paragraphs[0].Alignment = Alignment.center;
+            table.Rows[1].Cells[8].Paragraphs[0].Alignment = Alignment.center;
+
+            table.InsertRow();
+            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(wordKehoach, false))
+            {
+                string[] columns = { "hhtd_A", "hhtd_B", "hhtd_C", "hhtd_D", "hhtd_E", "hhtd_F", "hhtd_G", "hhtd_H", "hhtd_I" };
+                int cell = 0;
+                foreach (string column in columns)
+                {
+                    var sdt = wordDoc.MainDocumentPart.Document.Descendants<SdtElement>()
+                         .FirstOrDefault(s =>
+                             s.SdtProperties.GetFirstChild<Tag>()?.Val == $"{column}1");
+                    if (sdt != null)
+                    {
+                        table.Rows[2].Cells[cell].Paragraphs[0].Append(sdt.InnerText);
+                    }
+                    cell++;
+                }
+
+                var p = doc.Paragraphs.Where(s => s.Text.Contains("{hangtangtruyendan}")).FirstOrDefault();
+                if (p != null)
+                {
+                    p.InsertTableAfterSelf(table);
+                    p.ReplaceText("{hangtangtruyendan}", "");
+                }
             }
         }
 
@@ -554,9 +631,10 @@ namespace Viettel_Report_Automation.Controllers
                 soluongtramtheothuphu(doc);
                 trienkhaiBTS(doc);
                 bangtruyendan(doc);
-                vunglom(doc);*/
-                //  bangLuuluongChatluongmang(doc, wordkehoach);
-                chatluongmangvotuyen(doc, wordkehoach);
+                vunglom(doc);
+                bangLuuluongChatluongmang(doc, wordkehoach);
+                chatluongmangvotuyen(doc, wordkehoach);*/
+                hatangtruyendan(doc, wordkehoach);
                 wb.Dispose();
 
                 doc.Save();
