@@ -319,7 +319,7 @@ namespace Viettel_Report_Automation.Controllers
                              s.SdtProperties.GetFirstChild<Tag>()?.Val == $"{column}1");
                     if (sdt != null)
                     {
-                        table.Rows[2].Cells[cell].Paragraphs[0].Append(sdt.InnerText);
+                        table.Rows[2].Cells[cell].Paragraphs[0].Append(sdt.InnerText).FontSize(10);
                     }
                     cell++;
                 }
@@ -622,16 +622,8 @@ namespace Viettel_Report_Automation.Controllers
 
                 //doc.ReplaceText("{thang}", "08");
                 doc.ReplaceText("{nam}", DateTime.Now.Year.ToString());
-
-                /*doc.ReplaceText("{nhanxet01}", "Vị trí trạm hiện tại Viettel đang chiếm ưu thế với 1633 vị trí. Số lượng vị trí trạm Viettel nhiều hơn Vinaphone 240 vị trí và nhiều hơn Mobifone 510 vị trí. Xét về mức huyện Viettel còn 4 huyện có vị trí trạm ít hơn nhà mạng Vina là Krông Bông ít hơn 4 vị trí, Huyện Ea Súp và Krông Búk ít hơn 1 vị trí, huyện Ea Súp ít hơn 5 trạm");
-                doc.ReplaceText("{h_ketquathuchien6thang}", "KẾT QUẢ THỰC HIỆN 6 THÁNG ĐẦU NĂM 2025");*/
-
+                
                 /*hatangdidong(doc);
-                bangchitieuhatang(doc, ws, wsMeta);
-                soluongtramtheothuphu(doc);
-                trienkhaiBTS(doc);
-                bangtruyendan(doc);
-                vunglom(doc);
                 bangLuuluongChatluongmang(doc, wordkehoach);
                 chatluongmangvotuyen(doc, wordkehoach);*/
                 hatangtruyendan(doc, wordkehoach);
