@@ -3,7 +3,6 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System.Data;
-using System.Drawing;
 using System.IO;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
@@ -253,13 +252,29 @@ namespace Viettel_Report_Automation.Controllers
                 p.ReplaceText("{bangchatluongmangvotuyen}", "");
             }
         }
-
+        private void ketquathuchienKPI(string wordBaocao, string wordKehoach, IXLWorksheet wsKPI)
+        {
+            using (var doc = WordprocessingDocument.Open(wordBaocao, true))
+            {
+                var table = new DocumentFormat.OpenXml.Drawing.Table(
+                    new TableBorders(
+                        new DocumentFormat.OpenXml.Drawing.TopBorder { Val = BorderValues.Single, Size = 4 },
+                        new DocumentFormat.OpenXml.Drawing.BottomBorder { Val = BorderValues.Single, Size = 4 },
+                        new DocumentFormat.OpenXml.Drawing.LeftBorder { Val = BorderValues.Single, Size = 4 },
+                        new DocumentFormat.OpenXml.Drawing.RightBorder { Val = BorderValues.Single, Size = 4 },
+                        new InsideHorizontalBorder { Val = BorderValues.Single, Size = 4 },
+                        new InsideVerticalBorder { Val = BorderValues.Single, Size = 4 }
+                    )
+                    );
+            }
+        }
         private void hatangtruyendan(DocX doc, string wordKehoach)
         {
-            var table = doc.AddTable(2, 9);
+            var table = doc.AddTable(2, 11);
 
-            table.Rows[0].MergeCells(5, 8);
-            table.Rows[0].MergeCells(1, 4);
+            table.Rows[0].MergeCells(3, 5);
+            table.Rows[0].MergeCells(6, 8);
+            table.Rows[0].MergeCells(9, 10);
             table.MergeCellsInColumn(0, 0, 1);
 
             table.AutoFit = AutoFit.Window;
@@ -281,8 +296,8 @@ namespace Viettel_Report_Automation.Controllers
             table.Rows[0].Cells[1].Paragraphs[0].Alignment = Alignment.center;
             table.Rows[0].Cells[2].Paragraphs[0].Alignment = Alignment.center;
 
-            table.Rows[0].Cells[0].FillColor = System.Drawing.Color.Yellow; 
-            table.Rows[0].Cells[1].FillColor = System.Drawing.Color.Yellow; 
+            table.Rows[0].Cells[0].FillColor = System.Drawing.Color.Yellow;
+            table.Rows[0].Cells[1].FillColor = System.Drawing.Color.Yellow;
             table.Rows[0].Cells[2].FillColor = System.Drawing.Color.Yellow;
 
             table.Rows[1].Cells[0].FillColor = System.Drawing.Color.Yellow;
@@ -622,11 +637,12 @@ namespace Viettel_Report_Automation.Controllers
 
                 //doc.ReplaceText("{thang}", "08");
                 doc.ReplaceText("{nam}", DateTime.Now.Year.ToString());
-                
+
                 /*hatangdidong(doc);
                 bangLuuluongChatluongmang(doc, wordkehoach);
                 chatluongmangvotuyen(doc, wordkehoach);*/
-                hatangtruyendan(doc, wordkehoach);
+                //  hatangtruyendan(doc, wordkehoach);
+                ketquathuchienKPI(doc, wordkehoach, ws);
                 wb.Dispose();
 
                 doc.Save();
