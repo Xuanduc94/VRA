@@ -258,7 +258,38 @@ namespace Viettel_Report_Automation.Controllers
         }
         private void ketquathuchienKPI(DocX doc, string wordKehoach, IXLWorksheet wsKPI)
         {
-            var table = doc.AddTable(2, 13);
+          
+
+            var data = new Dictionary<string, List<string>>();
+            int row = 3;
+            string currentGroup = null;
+            while (!wsKPI.Cell(row, 2).IsEmpty())
+            {
+                string group = wsKPI.Cell(row, 1).GetString();
+                string detail = wsKPI.Cell(row, 2).GetString();
+
+                // Nếu cột A rỗng thì dùng group trước đó
+                if (string.IsNullOrWhiteSpace(group))
+                {
+                    group = currentGroup;
+                }
+                else
+                {
+                    currentGroup = group;
+                }
+
+                if (!data.ContainsKey(group))
+                    data[group] = new List<string>();
+
+                data[group].Add(detail);
+
+                row++;
+            }
+
+
+          
+            int totalRows = data.Sum(g => g.Value.Count);
+            var table = doc.AddTable(totalRows +2, 13);
 
             table.Rows[0].Cells[0].Paragraphs[0].Append("Nội dung").FontSize(10);
             table.Rows[0].Cells[2].Paragraphs[0].Append("ĐVT").FontSize(10);
@@ -286,42 +317,30 @@ namespace Viettel_Report_Automation.Controllers
             table.Rows[0].MergeCells(4, 6);
             table.Rows[0].MergeCells(5, 7);
 
-            for (int i = 0; i < wsKPI.RowsUsed().Count(); i++)
+
+            // Đổ dữ liệu vào word
+           
+        
+            int currentRow = 2;
+            foreach (var group in data)
             {
-                table.InsertRow();
+               
+                int groupStartRow = currentRow;
+
+                foreach (var item in group.Value)
+                {
+                    table.Rows[currentRow].Cells[0].Paragraphs[0].Append(group.Key).FontSize(10);
+                    table.Rows[currentRow].Cells[1].Paragraphs[0].Append(item).FontSize(10);
+                    currentRow++;
+                }
+
+                // Merge cột A theo chiều dọc
+                if (group.Value.Count > 1)
+                {
+                    table.MergeCellsInColumn(0, groupStartRow, currentRow - 1);
+                }
             }
 
-            int rowWord = 2;
-            for (int rowExcel = 3; rowExcel < wsKPI.RowsUsed().Count(); rowExcel++)
-            {
-                var cell = wsKPI.Cell($"A{rowExcel}");
-                if (rowWord == 3) { Debugger.Break(); }
-              /*  string excelIndex = cell.Value.ToString();
-                table.Rows[rowWord].Cells[0].Paragraphs[0].Append(excelIndex);*/
-                var mergedRange = wsKPI.MergedRanges
-                              .FirstOrDefault(r => r.Contains(cell));
-                if (mergedRange != null)
-                {
-                    int rowSpan = mergedRange.RowCount();
-                    int endRow = rowWord + rowSpan - 1;
-                    table.MergeCellsInColumn(0, rowWord, endRow);
-                    //rowWord = rowWord + rowSpan+1;
-                }
-                if (rowWord == 4)
-                {
-                    break;
-                }
-                rowWord++;
-
-            }
-
-            /*  List<MergeRange> mergeRanges = new List<MergeRange>();
-              foreach (var range in wsKPI.MergedRanges)
-              {
-                  mergeRanges.Add(new MergeRange(range.RangeAddress, range.RowCount(), range.ColumnCount(), range.FirstCell().GetString()));
-
-              }
-              mergeRanges = mergeRanges.Where(s => s.colSpan ==1).ToList();*/
             var p = doc.Paragraphs.Where(s => s.Text.Contains("{ketquathuchienkpi}")).FirstOrDefault();
             if (p != null)
             {
@@ -531,9 +550,9 @@ namespace Viettel_Report_Automation.Controllers
             table.MergeCellsInColumn(4, 0, 1);
             table.Rows[0].MergeCells(5, 7);
             table.Rows[0].MergeCells(6, 8);
-            
+
             DateTime current = DateTime.Now;
-            
+
             table.Rows[0].Cells[0].Paragraphs[0].Append(@"Các chỉ tiêu triển khai hạ tầng chính").Font(font).Bold();
             table.Rows[0].Cells[1].Paragraphs[0].Append(@"ĐVT").Font(font).Bold();
             table.Rows[0].Cells[2].Paragraphs[0].Append($"Kế hoạch T{current.Month}").Font(font).Bold();
@@ -595,7 +614,7 @@ namespace Viettel_Report_Automation.Controllers
                 t.ReplaceText("{bangchitieu}", "");
                 t.InsertTableAfterSelf(table);
             }
-           
+
         }
 
         private void trienkhaiBTS(DocX doc)
@@ -697,23 +716,23 @@ namespace Viettel_Report_Automation.Controllers
             List<string> mainCreatia = new List<string>();
 
             string wordPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Files", "Baocao.docx");
-            using (var docKh = DocX.Load(wordkehoach))
-            {
-                bangchitieuhatang(docKh, ws, wsMeta);
-                docKh.Save();
-                docKh.Dispose();
-            }
+            /*  using (var docKh = DocX.Load(wordkehoach))
+              {
+                  bangchitieuhatang(docKh, ws, wsMeta);
+                  docKh.Save();
+                  docKh.Dispose();
+              }*/
             using (var doc = DocX.Load(wordPath))
             {
 
                 //doc.ReplaceText("{thang}", "08");
                 doc.ReplaceText("{nam}", DateTime.Now.Year.ToString());
-                
+
                 /*hatangdidong(doc);
                 bangLuuluongChatluongmang(doc, wordkehoach);
                 chatluongmangvotuyen(doc, wordkehoach);*/
                 //  hatangtruyendan(doc, wordkehoach);
-               // ketquathuchienKPI(doc, wordkehoach, ws);
+                ketquathuchienKPI(doc, wordkehoach, ws);
                 wb.Dispose();
 
                 doc.Save();
