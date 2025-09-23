@@ -39,20 +39,20 @@ namespace Viettel_Report_Automation.Controllers
             CreateMeTracking(fileTheodoi, monthStr.Trim());
             progress.Report("Tính toán dữ liệu");
             WriteToKPIFile(fileTheodoi, fileChamdiem, monthStr.Split(" ")[1]);
-            CopyDataToTable(fileChamdiem);
-            /*string m = sheetChamDiem.Cell("G1").Value.ToString();
+            string m = sheetChamDiem.Cell("G1").Value.ToString();
             string[] strSpilt = m.Split('/', ' ');
             int.TryParse(strSpilt[1], out int month);
             progress.Report("Tổng hợp báo cáo quý");
-            QuarterlyReport(progress, fileTheodoi, month);*/
+            QuarterlyReport(progress, fileTheodoi, month);
             workbookChamDiem.Dispose();
-            /* progress.Report("Tính toán báo cáo năm");
-             YearReport();
-             progress.Report("Tổng hợp báo cáo");
-             int quater = NumberHelper.GetQuarter(month);
-             MappingDataYearAndQuaterToKPI(quater, fileChamdiem);
-             MappingDataTotal(fileChamdiem);
-             progress.Report("Đã tính toán xong");*/
+            progress.Report("Tính toán báo cáo năm");
+            YearReport();
+            progress.Report("Tổng hợp báo cáo");
+            int quater = NumberHelper.GetQuarter(month);
+            MappingDataYearAndQuaterToKPI(quater, fileChamdiem);
+            MappingDataTotal(fileChamdiem);
+            CopyDataToTable(fileChamdiem);
+            progress.Report("Đã tính toán xong");
         }
 
 
@@ -78,24 +78,45 @@ namespace Viettel_Report_Automation.Controllers
 
                 if (row != 0)
                 {
+                    // du lieu thang
                     wsKPI.Cell($"G{row}").Value = worksheetMeta.Cell($"C{i}").GetString();
                     wsKPI.Cell($"H{row}").Value = worksheetMeta.Cell($"D{i}").GetString();
-                    try
-                    {
-                        if (worksheetMeta.Cell($"D{i}").GetString() != "" && worksheetMeta.Cell($"C{i}").GetString() != "" && worksheetMeta.Cell($"D{i}").GetString()!= "0" && worksheetMeta.Cell($"C{i}").GetString() != "0")
-                        {
-                            wsKPI.Cell($"I{row}").Value = NumberHelper.ParseStringToDouble(worksheetMeta.Cell($"D{i}").GetString()) / NumberHelper.ParseStringToDouble(worksheetMeta.Cell($"C{i}").GetString());
 
-                        }
-                        else
-                        {
-                            wsKPI.Cell($"I{row}").Value = 0;
-                        }
+                    if (worksheetMeta.Cell($"D{i}").GetString() != "" && worksheetMeta.Cell($"C{i}").GetString() != "" && worksheetMeta.Cell($"D{i}").GetString() != "0" && worksheetMeta.Cell($"C{i}").GetString() != "0")
+                    {
+                        wsKPI.Cell($"I{row}").Value = NumberHelper.ParseStringToDouble(worksheetMeta.Cell($"D{i}").GetString()) / NumberHelper.ParseStringToDouble(worksheetMeta.Cell($"C{i}").GetString());
+
                     }
-                    catch (Exception)
+                    else
                     {
+                        wsKPI.Cell($"I{row}").Value = 0;
+                    }
 
-                        MessageBox.Show($"Dòng dữ liệu B{i} có giá trị: {worksheetMeta.Cell($"C{i}").GetString()}");
+                    /*Du lieu quy*/
+
+                    wsKPI.Cell($"J{row}").Value = worksheetMeta.Cell($"E{i}").GetString();
+                    wsKPI.Cell($"K{row}").Value = worksheetMeta.Cell($"F{i}").GetString();
+                    if (worksheetMeta.Cell($"F{i}").GetString() != "" && worksheetMeta.Cell($"C{i}").GetString() != "" && worksheetMeta.Cell($"E{i}").GetString() != "0" && worksheetMeta.Cell($"C{i}").GetString() != "0")
+                    {
+                        wsKPI.Cell($"L{row}").Value = NumberHelper.ParseStringToDouble(worksheetMeta.Cell($"F{i}").GetString()) / NumberHelper.ParseStringToDouble(worksheetMeta.Cell($"E{i}").GetString());
+
+                    }
+                    else
+                    {
+                        wsKPI.Cell($"L{row}").Value = 0;
+                    }
+                    /*Du lieu nam */
+
+                    wsKPI.Cell($"M{row}").Value = worksheetMeta.Cell($"G{i}").GetString();
+                    wsKPI.Cell($"N{row}").Value = worksheetMeta.Cell($"H{i}").GetString();
+                    if (worksheetMeta.Cell($"F{i}").GetString() != "" && worksheetMeta.Cell($"C{i}").GetString() != "" && worksheetMeta.Cell($"E{i}").GetString() != "0" && worksheetMeta.Cell($"C{i}").GetString() != "0")
+                    {
+                        wsKPI.Cell($"O{row}").Value = NumberHelper.ParseStringToDouble(worksheetMeta.Cell($"H{i}").GetString()) / NumberHelper.ParseStringToDouble(worksheetMeta.Cell($"G{i}").GetString());
+
+                    }
+                    else
+                    {
+                        wsKPI.Cell($"O{row}").Value = 0;
                     }
                 }
             }
@@ -268,7 +289,12 @@ namespace Viettel_Report_Automation.Controllers
             }
             return result;
         }
-
+        /// <summary>
+        /// Hàm tổng hợp báo cáo theo quý file tonghopquy
+        /// </summary>
+        /// <param name="progress"></param>
+        /// <param name="fileTheodoi"></param>
+        /// <param name="month"></param>
         private void QuarterlyReport(IProgress<string> progress, string fileTheodoi, int month)
         {
 
