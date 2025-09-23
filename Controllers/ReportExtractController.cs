@@ -36,14 +36,15 @@ namespace Viettel_Report_Automation.Controllers
             var sheetChamDiem = workbookChamDiem.Worksheet("BC_chi_tiet");
             string monthStr = StringHelper.RemoveDiacriticsAndSpaces(sheetChamDiem.Cell("G1").Value.ToString(), false).Replace("/", ".").ToUpper();
             progress.Report("Tiến hành cấu hình");
-            this.CreateMeTracking(fileTheodoi, monthStr.Trim());
+            CreateMeTracking(fileTheodoi, monthStr.Trim());
             progress.Report("Tính toán dữ liệu");
             WriteToKPIFile(fileTheodoi, fileChamdiem, monthStr.Split(" ")[1]);
-            string m = sheetChamDiem.Cell("G1").Value.ToString();
+            CopyDataToTable(fileChamdiem);
+            /*string m = sheetChamDiem.Cell("G1").Value.ToString();
             string[] strSpilt = m.Split('/', ' ');
             int.TryParse(strSpilt[1], out int month);
             progress.Report("Tổng hợp báo cáo quý");
-            QuarterlyReport(progress, fileTheodoi, month);
+            QuarterlyReport(progress, fileTheodoi, month);*/
             workbookChamDiem.Dispose();
             /* progress.Report("Tính toán báo cáo năm");
              YearReport();
@@ -54,7 +55,54 @@ namespace Viettel_Report_Automation.Controllers
              progress.Report("Đã tính toán xong");*/
         }
 
-        
+
+        private void CopyDataToTable(string fileChamdiem)
+        {
+            var workbookKPI = new XLWorkbook(fileChamdiem);
+            var worksheetMeta = workbookKPI.Worksheet("Meta");
+            var wsKPI = workbookKPI.Worksheet("BC_chi_tiet");
+            for (int i = 3; i < worksheetMeta.RowsUsed().Count(); i++)
+            {
+                string keyword = worksheetMeta.Cell($"B{i}").GetString();
+                var cells = wsKPI.Column("Q").CellsUsed();
+                int row = 0;
+                foreach (var cell in cells)
+                {
+                    string cv = cell.GetString();
+                    if (cv == keyword)
+                    {
+                        row = cell.Address.RowNumber;
+                        break;
+                    }
+                }
+
+                if (row != 0)
+                {
+                    wsKPI.Cell($"G{row}").Value = worksheetMeta.Cell($"C{i}").GetString();
+                    wsKPI.Cell($"H{row}").Value = worksheetMeta.Cell($"D{i}").GetString();
+                    try
+                    {
+                        if (worksheetMeta.Cell($"D{i}").GetString() != "" && worksheetMeta.Cell($"C{i}").GetString() != "" && worksheetMeta.Cell($"D{i}").GetString()!= "0" && worksheetMeta.Cell($"C{i}").GetString() != "0")
+                        {
+                            wsKPI.Cell($"I{row}").Value = NumberHelper.ParseStringToDouble(worksheetMeta.Cell($"D{i}").GetString()) / NumberHelper.ParseStringToDouble(worksheetMeta.Cell($"C{i}").GetString());
+
+                        }
+                        else
+                        {
+                            wsKPI.Cell($"I{row}").Value = 0;
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                        MessageBox.Show($"Dòng dữ liệu B{i} có giá trị: {worksheetMeta.Cell($"C{i}").GetString()}");
+                    }
+                }
+            }
+            workbookKPI.Save();
+            workbookKPI.Dispose();
+        }
+
 
         private void MappingDataTotal(string fileChamDiem)
         {
@@ -131,7 +179,9 @@ namespace Viettel_Report_Automation.Controllers
             wbTong.Dispose();
 
         }
-
+        /// <summary>
+        /// Cấu hình file theo dõi KPI
+        /// </summary>
         private void CreateMeTracking(string fileTheodoi, string month)
         {
             var workbook = new XLWorkbook(fileTheodoi);
@@ -172,7 +222,12 @@ namespace Viettel_Report_Automation.Controllers
             workbook.Save();
             workbook.Dispose();
         }
-
+        /// <summary>
+        /// Chep du lieu tu file theo doi vao file kpi
+        /// </summary>
+        /// <param name="fileTheodoi"></param>
+        /// <param name="fileChamdiem"></param>
+        /// <param name="month"></param>
         private void WriteToKPIFile(string fileTheodoi, string fileChamdiem, string month)
         {
             var workbook = new XLWorkbook(fileTheodoi);

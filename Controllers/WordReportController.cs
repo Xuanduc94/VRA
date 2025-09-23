@@ -256,9 +256,9 @@ namespace Viettel_Report_Automation.Controllers
                 p.ReplaceText("{bangchatluongmangvotuyen}", "");
             }
         }
-        private void ketquathuchienKPI(DocX doc, string wordKehoach, IXLWorksheet wsKPI)
+        private void ketquathuchienKPI(DocX doc, string wordKehoach, IXLWorksheet wsKPI, IXLWorkbook wbKPI = null)
         {
-          
+
 
             var data = new Dictionary<string, List<string>>();
             int row = 3;
@@ -287,9 +287,9 @@ namespace Viettel_Report_Automation.Controllers
             }
 
 
-          
+
             int totalRows = data.Sum(g => g.Value.Count);
-            var table = doc.AddTable(totalRows +2, 13);
+            var table = doc.AddTable(totalRows + 2, 13);
 
             table.Rows[0].Cells[0].Paragraphs[0].Append("Nội dung").FontSize(10);
             table.Rows[0].Cells[2].Paragraphs[0].Append("ĐVT").FontSize(10);
@@ -317,14 +317,11 @@ namespace Viettel_Report_Automation.Controllers
             table.Rows[0].MergeCells(4, 6);
             table.Rows[0].MergeCells(5, 7);
 
-
-            // Đổ dữ liệu vào word
-           
-        
             int currentRow = 2;
+            int cellTable = 2;
             foreach (var group in data)
             {
-               
+
                 int groupStartRow = currentRow;
 
                 foreach (var item in group.Value)
@@ -339,6 +336,81 @@ namespace Viettel_Report_Automation.Controllers
                 {
                     table.MergeCellsInColumn(0, groupStartRow, currentRow - 1);
                 }
+            }
+
+            Dictionary<string, List<string>> dataTable = new Dictionary<string, List<string>>();
+
+
+            for (int r = 3; r < wsKPI.RowsUsed().Count(); r++)
+            {
+                List<string> dataRow = new List<string>();
+                for (int cell = 3; cell < 17; cell++)
+                {
+                   
+                    if(cell != 4 & cell != 5 & cell != 6)
+                    {
+                        string v = null;
+                        var c = wsKPI.Row(r).Cell(cell);
+                        if (c.HasFormula == false)
+                        {
+                            v = c.Value.ToString();
+
+                        }
+                        else
+                        {
+                            string formula = c.FormulaA1;
+
+                            if (formula.Contains("Meta") || !formula.Contains("!"))
+                            {
+                                try
+                                {
+                                    // Ví dụ công thức: =MetaTH!B3
+                                    string formulaBody = formula.Substring(0); // bỏ dấu '='
+                                    var parts = formulaBody.Split('!');
+
+                                    if (parts.Length == 2)
+                                    {
+                                        string sheetName = parts[0].Trim();
+                                        string address = parts[1].Trim();
+
+                                        var refSheet = wbKPI.Worksheet(sheetName);
+                                        var refCell = refSheet.Cell(address);
+
+
+                                        v = refCell.Value.ToString();
+                                        if (v == "null")
+                                        {
+                                            v = "0";
+                                        }
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    throw ex;
+                                }
+                            }
+
+
+                        }
+                        dataRow.Add(v);
+                    }
+                   
+                }
+                dataTable["row-" + r] = dataRow;
+            }
+
+            int rw = 2;
+            foreach (var item in dataTable)
+            {
+                int c = 2;
+                int idx = 0;
+                foreach (string cellValue in item.Value)
+                {
+                    table.Rows[rw].Cells[c].Paragraphs[0].Append(cellValue).FontSize(10);
+                    c++;
+                    idx++;
+                }
+                rw++;
             }
 
             var p = doc.Paragraphs.Where(s => s.Text.Contains("{ketquathuchienkpi}")).FirstOrDefault();
@@ -732,7 +804,7 @@ namespace Viettel_Report_Automation.Controllers
                 bangLuuluongChatluongmang(doc, wordkehoach);
                 chatluongmangvotuyen(doc, wordkehoach);*/
                 //  hatangtruyendan(doc, wordkehoach);
-                ketquathuchienKPI(doc, wordkehoach, ws);
+                ketquathuchienKPI(doc, wordkehoach, ws, wb);
                 wb.Dispose();
 
                 doc.Save();

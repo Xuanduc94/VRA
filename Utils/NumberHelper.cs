@@ -10,11 +10,15 @@ namespace Viettel_Report_Automation.Utils
     {
         public static double ParseStringToDouble(string _number)
         {
-            if (_number != "" || _number != "-")
+            if (double.TryParse(_number, out double result))
             {
-                 double.TryParse(_number, out double result);
+                // Nếu là NaN hoặc Infinity thì cũng trả về default
+                if (double.IsNaN(result) || double.IsInfinity(result))
+                    return 0;
+
                 return result;
             }
+
             return 0;
         }
 

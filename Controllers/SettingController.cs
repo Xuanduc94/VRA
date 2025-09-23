@@ -29,10 +29,11 @@ namespace Viettel_Report_Automation.Controllers
             for (int row = 3; row <= count; row++)
             {
                 workSheetMeta.Cell("A" + rowMeta).Value = id;
-                string Id = StringHelper.RemoveDiacriticsAndSpaces(workSheet.Cell("B" + row).Value.ToString());
+                string Id = StringHelper.RemoveDiacriticsAndSpaces(workSheet.Cell("B" + row).Value.ToString().ToLower());
                 workSheetMeta.Cell("B" + rowMeta).Value =Id;
+                workSheet.Cell("Q" + row).Value = Id;
 
-                workSheet.Cell(row, 7).FormulaA1 = ("=Meta!C"+ rowMeta);
+               /* workSheet.Cell(row, 7).FormulaA1 = ("=Meta!C"+ rowMeta);
                 workSheet.Cell(row, 8).FormulaA1 = "=Meta!D" + rowMeta;
 
                 workSheet.Cell("J" + row).FormulaA1 = "=Meta!E" + rowMeta;
@@ -44,7 +45,7 @@ namespace Viettel_Report_Automation.Controllers
                 wsTh.Cell($"A{rowMeta}").Value = Id;
                 workSheet.Cell($"D{row}").FormulaA1 = $"=MetaTH!B{rowMeta}";
                 workSheet.Cell($"E{row}").FormulaA1 = $"=MetaTH!C{rowMeta}";
-                workSheet.Cell($"F{row}").FormulaA1 = $"=MetaTH!D{rowMeta}";
+                workSheet.Cell($"F{row}").FormulaA1 = $"=MetaTH!D{rowMeta}";*/
                 rowMeta++;  
                 id++;
             }
