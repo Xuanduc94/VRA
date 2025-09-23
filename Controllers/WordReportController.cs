@@ -3,8 +3,11 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Windows.Controls;
+using Viettel_Report_Automation.Models;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
 using Alignment = Xceed.Document.NET.Alignment;
@@ -253,13 +256,177 @@ namespace Viettel_Report_Automation.Controllers
                 p.ReplaceText("{bangchatluongmangvotuyen}", "");
             }
         }
+        private void ketquathuchienKPI(DocX doc, string wordKehoach, IXLWorksheet wsKPI, IXLWorkbook wbKPI = null)
+        {
 
+
+            var data = new Dictionary<string, List<string>>();
+            int row = 3;
+            string currentGroup = null;
+            while (!wsKPI.Cell(row, 2).IsEmpty())
+            {
+                string group = wsKPI.Cell(row, 1).GetString();
+                string detail = wsKPI.Cell(row, 2).GetString();
+
+                // Nếu cột A rỗng thì dùng group trước đó
+                if (string.IsNullOrWhiteSpace(group))
+                {
+                    group = currentGroup;
+                }
+                else
+                {
+                    currentGroup = group;
+                }
+
+                if (!data.ContainsKey(group))
+                    data[group] = new List<string>();
+
+                data[group].Add(detail);
+
+                row++;
+            }
+
+
+
+            int totalRows = data.Sum(g => g.Value.Count);
+            var table = doc.AddTable(totalRows + 2, 13);
+
+            table.Rows[0].Cells[0].Paragraphs[0].Append("Nội dung").FontSize(10);
+            table.Rows[0].Cells[2].Paragraphs[0].Append("ĐVT").FontSize(10);
+
+            table.Rows[0].Cells[3].Paragraphs[0].Append("Tháng 6/2025").FontSize(10);
+
+            table.Rows[0].Cells[6].Paragraphs[0].Append("Quý 2/2025").FontSize(10);
+
+            table.Rows[0].Cells[9].Paragraphs[0].Append("Năm 2025").FontSize(10);
+
+            table.Rows[1].Cells[3].Paragraphs[0].Append("Kế hoạch").FontSize(10);
+            table.Rows[1].Cells[4].Paragraphs[0].Append("Thực hiện").FontSize(10);
+            table.Rows[1].Cells[5].Paragraphs[0].Append("%HT").FontSize(10);
+
+            table.Rows[1].Cells[6].Paragraphs[0].Append("Kế hoạch").FontSize(10);
+            table.Rows[1].Cells[7].Paragraphs[0].Append("Thực hiện").FontSize(10);
+            table.Rows[1].Cells[8].Paragraphs[0].Append("%HT").FontSize(10);
+
+            table.Rows[1].Cells[9].Paragraphs[0].Append("Kế hoạch").FontSize(10);
+            table.Rows[1].Cells[10].Paragraphs[0].Append("Thực hiện").FontSize(10);
+            table.Rows[1].Cells[11].Paragraphs[0].Append("%HT").FontSize(10);
+            table.Rows[1].Cells[12].Paragraphs[0].Append("Nhân sự thực hiện").FontSize(10);
+
+            table.Rows[0].MergeCells(3, 5);
+            table.Rows[0].MergeCells(4, 6);
+            table.Rows[0].MergeCells(5, 7);
+
+            int currentRow = 2;
+            int cellTable = 2;
+            foreach (var group in data)
+            {
+
+                int groupStartRow = currentRow;
+
+                foreach (var item in group.Value)
+                {
+                    table.Rows[currentRow].Cells[0].Paragraphs[0].Append(group.Key).FontSize(10);
+                    table.Rows[currentRow].Cells[1].Paragraphs[0].Append(item).FontSize(10);
+                    currentRow++;
+                }
+
+                // Merge cột A theo chiều dọc
+                if (group.Value.Count > 1)
+                {
+                    table.MergeCellsInColumn(0, groupStartRow, currentRow - 1);
+                }
+            }
+
+            Dictionary<string, List<string>> dataTable = new Dictionary<string, List<string>>();
+
+
+            for (int r = 3; r < wsKPI.RowsUsed().Count(); r++)
+            {
+                List<string> dataRow = new List<string>();
+                for (int cell = 3; cell < 17; cell++)
+                {
+                   
+                    if(cell != 4 & cell != 5 & cell != 6)
+                    {
+                        string v = null;
+                        var c = wsKPI.Row(r).Cell(cell);
+                        if (c.HasFormula == false)
+                        {
+                            v = c.Value.ToString();
+
+                        }
+                        else
+                        {
+                            string formula = c.FormulaA1;
+
+                            if (formula.Contains("Meta") || !formula.Contains("!"))
+                            {
+                                try
+                                {
+                                    // Ví dụ công thức: =MetaTH!B3
+                                    string formulaBody = formula.Substring(0); // bỏ dấu '='
+                                    var parts = formulaBody.Split('!');
+
+                                    if (parts.Length == 2)
+                                    {
+                                        string sheetName = parts[0].Trim();
+                                        string address = parts[1].Trim();
+
+                                        var refSheet = wbKPI.Worksheet(sheetName);
+                                        var refCell = refSheet.Cell(address);
+
+
+                                        v = refCell.Value.ToString();
+                                        if (v == "null")
+                                        {
+                                            v = "0";
+                                        }
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    throw ex;
+                                }
+                            }
+
+
+                        }
+                        dataRow.Add(v);
+                    }
+                   
+                }
+                dataTable["row-" + r] = dataRow;
+            }
+
+            int rw = 2;
+            foreach (var item in dataTable)
+            {
+                int c = 2;
+                int idx = 0;
+                foreach (string cellValue in item.Value)
+                {
+                    table.Rows[rw].Cells[c].Paragraphs[0].Append(cellValue).FontSize(10);
+                    c++;
+                    idx++;
+                }
+                rw++;
+            }
+
+            var p = doc.Paragraphs.Where(s => s.Text.Contains("{ketquathuchienkpi}")).FirstOrDefault();
+            if (p != null)
+            {
+                p.InsertTableAfterSelf(table);
+                p.ReplaceText("{ketquathuchienkpi}", "");
+            }
+        }
         private void hatangtruyendan(DocX doc, string wordKehoach)
         {
-            var table = doc.AddTable(2, 9);
+            var table = doc.AddTable(2, 11);
 
-            table.Rows[0].MergeCells(5, 8);
-            table.Rows[0].MergeCells(1, 4);
+            table.Rows[0].MergeCells(3, 5);
+            table.Rows[0].MergeCells(6, 8);
+            table.Rows[0].MergeCells(9, 10);
             table.MergeCellsInColumn(0, 0, 1);
 
             table.AutoFit = AutoFit.Window;
@@ -281,8 +448,8 @@ namespace Viettel_Report_Automation.Controllers
             table.Rows[0].Cells[1].Paragraphs[0].Alignment = Alignment.center;
             table.Rows[0].Cells[2].Paragraphs[0].Alignment = Alignment.center;
 
-            table.Rows[0].Cells[0].FillColor = System.Drawing.Color.Yellow; 
-            table.Rows[0].Cells[1].FillColor = System.Drawing.Color.Yellow; 
+            table.Rows[0].Cells[0].FillColor = System.Drawing.Color.Yellow;
+            table.Rows[0].Cells[1].FillColor = System.Drawing.Color.Yellow;
             table.Rows[0].Cells[2].FillColor = System.Drawing.Color.Yellow;
 
             table.Rows[1].Cells[0].FillColor = System.Drawing.Color.Yellow;
@@ -456,12 +623,13 @@ namespace Viettel_Report_Automation.Controllers
             table.Rows[0].MergeCells(5, 7);
             table.Rows[0].MergeCells(6, 8);
 
+            DateTime current = DateTime.Now;
+
             table.Rows[0].Cells[0].Paragraphs[0].Append(@"Các chỉ tiêu triển khai hạ tầng chính").Font(font).Bold();
             table.Rows[0].Cells[1].Paragraphs[0].Append(@"ĐVT").Font(font).Bold();
-            table.Rows[0].Cells[2].Paragraphs[0].Append(@"Kế hoạch T7").Font(font).Bold();
-            table.Rows[0].Cells[3].Paragraphs[0].Append(@"Thực hiện T7").Font(font).Bold();
+            table.Rows[0].Cells[2].Paragraphs[0].Append($"Kế hoạch T{current.Month}").Font(font).Bold();
+            table.Rows[0].Cells[3].Paragraphs[0].Append(@"Thực hiện T{current.Month}").Font(font).Bold();
             table.Rows[0].Cells[4].Paragraphs[0].Append(@"%TH").Font(font).Bold();
-            DateTime current = DateTime.Now;
             table.Rows[0].Cells[5].Paragraphs[0].Append($"Thực hiện năm {current.Year}").Font(font).Bold();
             table.Rows[0].Cells[6].Paragraphs[0].Append($"Thực hiện năm {current.Year - 1}").Font(font).Bold();
 
@@ -513,8 +681,12 @@ namespace Viettel_Report_Automation.Controllers
             }
 
             var t = doc.Paragraphs.Where(s => s.Text.Contains("{bangchitieu}")).FirstOrDefault();
-            t.ReplaceText("{bangchitieu}", "");
-            t.InsertTableAfterSelf(table);
+            if (t != null)
+            {
+                t.ReplaceText("{bangchitieu}", "");
+                t.InsertTableAfterSelf(table);
+            }
+
         }
 
         private void trienkhaiBTS(DocX doc)
@@ -616,17 +788,23 @@ namespace Viettel_Report_Automation.Controllers
             List<string> mainCreatia = new List<string>();
 
             string wordPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Files", "Baocao.docx");
-
+            /*  using (var docKh = DocX.Load(wordkehoach))
+              {
+                  bangchitieuhatang(docKh, ws, wsMeta);
+                  docKh.Save();
+                  docKh.Dispose();
+              }*/
             using (var doc = DocX.Load(wordPath))
             {
 
                 //doc.ReplaceText("{thang}", "08");
                 doc.ReplaceText("{nam}", DateTime.Now.Year.ToString());
-                
+
                 /*hatangdidong(doc);
                 bangLuuluongChatluongmang(doc, wordkehoach);
                 chatluongmangvotuyen(doc, wordkehoach);*/
-                hatangtruyendan(doc, wordkehoach);
+                //  hatangtruyendan(doc, wordkehoach);
+                ketquathuchienKPI(doc, wordkehoach, ws, wb);
                 wb.Dispose();
 
                 doc.Save();

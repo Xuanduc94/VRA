@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using System.IO;
 using System.Windows;
 using Viettel_Report_Automation.Controllers;
 
@@ -62,10 +63,17 @@ namespace Viettel_Report_Automation
                 });
                 await Task.Run(() =>
                 {
-                   /* ReportExtractController reportExtractController = new ReportExtractController(progress);
+                    string default_folder = AppDomain.CurrentDomain.BaseDirectory;
+                    ReportExtractController reportExtractController = new ReportExtractController(progress);
                     new SettingController().SettingScore(fileChamDiem, progress);
-                    reportExtractController.generateReport(this.fileChamDiem, fileExcel, fileWord);*/
-                    new WordReportController().generateWordFile(progress, fileChamDiem, "", fileWord);
+                    reportExtractController.generateReport(this.fileChamDiem, fileExcel, fileWord);
+                    string[] cd = fileChamDiem.Split("\\");
+                    string[] w = fileWord.Split("\\");
+                    string p1 = Path.Combine(default_folder, "Files", cd[cd.Length - 1]);
+                    string p2 = Path.Combine(default_folder, "Files", w[w.Length - 1]);
+                    File.Copy(fileChamDiem, p1, true);
+                    File.Copy(fileWord, p2,true);
+               //   new WordReportController().generateWordFile(progress, p1, "", p2);
                     
                 });
                 MessageBoxResult messageBoxResult = MessageBox.Show("Tạo báo cáo thành công", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -109,8 +117,6 @@ namespace Viettel_Report_Automation
             {
                 this.fileChamDiem = openFileDialog.FileName;
                 lbl_chamdiem.Content = openFileDialog.FileName.Length > 50 ? openFileDialog.FileName.Substring(0, 30) + "..." : openFileDialog.FileName;
-
-
 
             }
         }
