@@ -12,11 +12,11 @@ namespace Viettel_Report_Automation.Utils
         {
             if (double.TryParse(_number, out double result))
             {
-                // Nếu là NaN hoặc Infinity thì cũng trả về default
+               
                 if (double.IsNaN(result) || double.IsInfinity(result))
                     return 0;
 
-                return result;
+                return Math.Round(result, 2);
             }
 
             return 0;

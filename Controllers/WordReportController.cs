@@ -8,6 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Controls;
 using Viettel_Report_Automation.Models;
+using Viettel_Report_Automation.Utils;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
 using Alignment = Xceed.Document.NET.Alignment;
@@ -286,32 +287,30 @@ namespace Viettel_Report_Automation.Controllers
                 row++;
             }
 
-
-
             int totalRows = data.Sum(g => g.Value.Count);
             var table = doc.AddTable(totalRows + 2, 13);
 
-            table.Rows[0].Cells[0].Paragraphs[0].Append("Nội dung").FontSize(10);
-            table.Rows[0].Cells[2].Paragraphs[0].Append("ĐVT").FontSize(10);
+            table.Rows[0].Cells[0].Paragraphs[0].Append("Nội dung").FontSize(10).Bold();
+            table.Rows[0].Cells[2].Paragraphs[0].Append("ĐVT").FontSize(10).Bold();
 
-            table.Rows[0].Cells[3].Paragraphs[0].Append("Tháng 6/2025").FontSize(10);
+            table.Rows[0].Cells[3].Paragraphs[0].Append("Tháng 6/2025").FontSize(10).Bold();
 
-            table.Rows[0].Cells[6].Paragraphs[0].Append("Quý 2/2025").FontSize(10);
+            table.Rows[0].Cells[6].Paragraphs[0].Append("Quý 2/2025").FontSize(10).Bold();
 
-            table.Rows[0].Cells[9].Paragraphs[0].Append("Năm 2025").FontSize(10);
+            table.Rows[0].Cells[9].Paragraphs[0].Append("Năm 2025").FontSize(10).Bold();
 
-            table.Rows[1].Cells[3].Paragraphs[0].Append("Kế hoạch").FontSize(10);
-            table.Rows[1].Cells[4].Paragraphs[0].Append("Thực hiện").FontSize(10);
-            table.Rows[1].Cells[5].Paragraphs[0].Append("%HT").FontSize(10);
+            table.Rows[1].Cells[3].Paragraphs[0].Append("Kế hoạch").FontSize(10).Bold();
+            table.Rows[1].Cells[4].Paragraphs[0].Append("Thực hiện").FontSize(10).Bold();
+            table.Rows[1].Cells[5].Paragraphs[0].Append("%HT").FontSize(10).Bold();
 
-            table.Rows[1].Cells[6].Paragraphs[0].Append("Kế hoạch").FontSize(10);
-            table.Rows[1].Cells[7].Paragraphs[0].Append("Thực hiện").FontSize(10);
-            table.Rows[1].Cells[8].Paragraphs[0].Append("%HT").FontSize(10);
+            table.Rows[1].Cells[6].Paragraphs[0].Append("Kế hoạch").FontSize(10).Bold();
+            table.Rows[1].Cells[7].Paragraphs[0].Append("Thực hiện").FontSize(10).Bold();
+            table.Rows[1].Cells[8].Paragraphs[0].Append("%HT").FontSize(10).Bold();
 
-            table.Rows[1].Cells[9].Paragraphs[0].Append("Kế hoạch").FontSize(10);
-            table.Rows[1].Cells[10].Paragraphs[0].Append("Thực hiện").FontSize(10);
-            table.Rows[1].Cells[11].Paragraphs[0].Append("%HT").FontSize(10);
-            table.Rows[1].Cells[12].Paragraphs[0].Append("Nhân sự thực hiện").FontSize(10);
+            table.Rows[1].Cells[9].Paragraphs[0].Append("Kế hoạch").FontSize(10).Bold();
+            table.Rows[1].Cells[10].Paragraphs[0].Append("Thực hiện").FontSize(10).Bold();
+            table.Rows[1].Cells[11].Paragraphs[0].Append("%HT").FontSize(10).Bold();
+            table.Rows[1].Cells[12].Paragraphs[0].Append("Nhân sự thực hiện").FontSize(10).Bold();
 
             table.Rows[0].MergeCells(3, 5);
             table.Rows[0].MergeCells(4, 6);
@@ -331,7 +330,6 @@ namespace Viettel_Report_Automation.Controllers
                     currentRow++;
                 }
 
-                // Merge cột A theo chiều dọc
                 if (group.Value.Count > 1)
                 {
                     table.MergeCellsInColumn(0, groupStartRow, currentRow - 1);
@@ -346,55 +344,23 @@ namespace Viettel_Report_Automation.Controllers
                 List<string> dataRow = new List<string>();
                 for (int cell = 3; cell < 17; cell++)
                 {
-                   
-                    if(cell != 4 & cell != 5 & cell != 6)
+                    if (cell != 4 && cell != 5 && cell != 6)
                     {
                         string v = null;
                         var c = wsKPI.Row(r).Cell(cell);
-                        if (c.HasFormula == false)
+                        if (cell == 9 || cell == 12 || cell == 15)
                         {
-                            v = c.Value.ToString();
-
+                            double rs = NumberHelper.ParseStringToDouble(c.GetString()) * 100;
+                            v = rs.ToString() + "%";
                         }
                         else
                         {
-                            string formula = c.FormulaA1;
-
-                            if (formula.Contains("Meta") || !formula.Contains("!"))
-                            {
-                                try
-                                {
-                                    // Ví dụ công thức: =MetaTH!B3
-                                    string formulaBody = formula.Substring(0); // bỏ dấu '='
-                                    var parts = formulaBody.Split('!');
-
-                                    if (parts.Length == 2)
-                                    {
-                                        string sheetName = parts[0].Trim();
-                                        string address = parts[1].Trim();
-
-                                        var refSheet = wbKPI.Worksheet(sheetName);
-                                        var refCell = refSheet.Cell(address);
-
-
-                                        v = refCell.Value.ToString();
-                                        if (v == "null")
-                                        {
-                                            v = "0";
-                                        }
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    throw ex;
-                                }
-                            }
-
+                            v = c.GetString();
 
                         }
                         dataRow.Add(v);
                     }
-                   
+
                 }
                 dataTable["row-" + r] = dataRow;
             }
@@ -800,10 +766,10 @@ namespace Viettel_Report_Automation.Controllers
                 //doc.ReplaceText("{thang}", "08");
                 doc.ReplaceText("{nam}", DateTime.Now.Year.ToString());
 
-                /*hatangdidong(doc);
+                hatangdidong(doc);
                 bangLuuluongChatluongmang(doc, wordkehoach);
-                chatluongmangvotuyen(doc, wordkehoach);*/
-                //  hatangtruyendan(doc, wordkehoach);
+                chatluongmangvotuyen(doc, wordkehoach);
+                hatangtruyendan(doc, wordkehoach);
                 ketquathuchienKPI(doc, wordkehoach, ws, wb);
                 wb.Dispose();
 

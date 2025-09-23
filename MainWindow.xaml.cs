@@ -73,7 +73,7 @@ namespace Viettel_Report_Automation
                     string p2 = Path.Combine(default_folder, "Files", w[w.Length - 1]);
                     File.Copy(fileChamDiem, p1, true);
                     File.Copy(fileWord, p2,true);
-               //   new WordReportController().generateWordFile(progress, p1, "", p2);
+                    new WordReportController().generateWordFile(progress, p1, "", p2);
                     
                 });
                 MessageBoxResult messageBoxResult = MessageBox.Show("Tạo báo cáo thành công", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
